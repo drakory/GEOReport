@@ -1,46 +1,47 @@
 package config
 
 import (
-	"georeportapi/entity"
-	"os"
+    "georeportapi/entity"
+    "os"
+    "fmt"
 
-	"github.com/joho/godotenv"
-	"gorm.io/driver/mysql"
-	"gorm.io/gorm"
+    "github.com/joho/godotenv"
+    "gorm.io/driver/postgres"
+    "gorm.io/gorm"
 )
 
 var Db *gorm.DB
 
 func ConnectDB() {
-	err := godotenv.Load()
-	if err != nil {
-		panic("Error loading .env file")
-	}
+    err := godotenv.Load()
+    if err != nil {
+        panic("Error loading .env file")
+    }
 
-	dbUser := os.Getenv("DB_USERNAME")
-	dbPass := os.Getenv("DB_PASSWORD")
-	dbHost := os.Getenv("DB_HOST")
-	dbPort := os.Getenv("DB_PORT")
-	dbDatabase := os.Getenv("DB_DATABASE")
+    dbUser := os.Getenv("DB_USERNAME")
+    dbPass := os.Getenv("DB_PASSWORD")
+    dbHost := os.Getenv("DB_HOST")
+    dbPort := os.Getenv("DB_PORT")
+    dbDatabase := os.Getenv("DB_DATABASE")
 
-	dsn := dbUser + ":" + dbPass + "@tcp(" + dbHost + ":" + dbPort + ")/" + dbDatabase + "?charset=utf8mb4&parseTime=True&loc=Local"
+    dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable TimeZone=UTC",
+        dbHost, dbUser, dbPass, dbDatabase, dbPort)
 
-	Db, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic("Failed to connect to database!")
-	}
+    Db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
+    if err != nil {
+        panic("Failed to connect to database!")
+    }
 
-	err = Db.AutoMigrate(&entity.User{}, &entity.Report{})
-	if err != nil {
-		panic("Failed to migrate database!")
-	}
-
+    err = Db.AutoMigrate(&entity.User{}, &entity.Report{})
+    if err != nil {
+        panic("Failed to migrate database!")
+    }
 }
 
 func CloseDb() {
-	db, err := Db.DB()
-	if err != nil {
-		panic("Failed to close database!")
-	}
-	db.Close()
+    db, err := Db.DB()
+    if err != nil {
+        panic("Failed to close database!")
+    }
+    db.Close()
 }

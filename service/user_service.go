@@ -7,6 +7,7 @@ import (
 	"georeportapi/repository"
 	"github.com/mashingan/smapping"
 	"log"
+	"regexp"
 )
 
 func GetAllUsers() []dto.UserALLResponseDTO {
@@ -24,9 +25,26 @@ func GetAllUsers() []dto.UserALLResponseDTO {
 	return usersResponse
 }
 
-func Register(user entity.User) entity.User {
+func Register(userDTO dto.RegisterDTO) dto.UserIDResponseDTO {
+	user := entity.User{}
+	userResponse := dto.UserIDResponseDTO{}
+
+	err := smapping.FillStruct(&user, smapping.MapFields(&userDTO))
+	if err != nil {
+		log.Fatal("failed to map ", err)
+		return userResponse
+	}
+
+	//if !service.IsValidEmail(user.Email) {
+
 	user = repository.InsertUser(user)
-	return user
+	err = smapping.FillStruct(&userResponse, smapping.MapFields(&user))
+	if err != nil {
+		log.Fatal("failed to map response DTO", err)
+		return userResponse
+	}
+
+	return userResponse
 }
 
 func Profile(id uint64) (dto.UserIDResponseDTO,error) {
@@ -65,4 +83,15 @@ func DeleteAccount(identifiant uint64) error {
 func IsAllowed(userID uint64, pageID uint64) bool {
 	u := repository.GetTheUserUsingID(pageID)
 	return userID == u.ID
+}
+
+
+func IsUsedEmail(email string) bool {
+	e := repository.GetUserByEmail(email)
+	return e.Email == email	// IF TRUE, EMAIL IS VALID
+}
+
+func IsValidEmail(email string) bool {
+    var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
+    return emailRegex.MatchString(email)
 }

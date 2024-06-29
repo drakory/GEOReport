@@ -1,10 +1,13 @@
 package controller
 
 import (
+	"georeportapi/dto"
 	"georeportapi/entity"
 	"georeportapi/service"
-	"github.com/gin-gonic/gin"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
+	"time"
 )
 
 func GetAllUsers(c *gin.Context) {
@@ -16,7 +19,7 @@ func GetAllUsers(c *gin.Context) {
 }
 
 func Register(c *gin.Context) {
-	var user entity.User
+	var user dto.RegisterDTO
 	err := c.ShouldBind(&user)
 	if err != nil {
 		c.JSON(400,gin.H{
@@ -25,11 +28,31 @@ func Register(c *gin.Context) {
 		})
 		return
 	}
-	user = service.Register(user)
+	if service.IsUsedEmail(user.Email) {
+		c.JSON(401, gin.H{
+			"message": "the email you fill is already used",
+		})
+		return
+	}
+
+	if !service.IsValidEmail(user.Email) {
+		c.JSON(401, gin.H{
+			"message": "the email you fill is invalid",
+		})
+		return
+	}
+
+	userResponse := service.Register(user)
 	c.JSON(200, gin.H{
 		"message": "Insert user",
-		"user" : user,
+		"user" : userResponse,
 	})
+
+	wait := time.Duration(4) * time.Second	
+	time.Sleep(wait)
+	/*Login(c)
+
+	c.Redirect(303, "localhost:3000/georeport/homepage/")*/
 }
 
 func Profile(c *gin.Context) {
