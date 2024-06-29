@@ -34,20 +34,20 @@ func Register(c *gin.Context) {
 
 func Profile(c *gin.Context) {
 	identifiant, _ := strconv.ParseUint(c.Param("id"), 10,64)
-	userID, error := strconv.ParseUint(c.GetString("user_id"), 10, 64)
+	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	if !service.IsAllowed(userID, identifiant) {
 		c.JSON(401, gin.H{
 			"message": "you do not have the permission - you are not the owner of this user",
 		})
 		return
 	}
-	if error != nil {
+	/*if error != nil {
 		c.JSON(400,gin.H{
 			"message":"error",
 			"error": error.Error(),
 		})
 		return
-	}
+	}*/
 	
 	user, err := service.Profile(identifiant)
 	if err != nil {
@@ -66,20 +66,20 @@ func Profile(c *gin.Context) {
 func UpdateProfile(c *gin.Context) {
 
 	identifiant, _ := strconv.ParseUint(c.Param("id"), 10,64)
-	userID, error := strconv.ParseUint(c.GetString("user_id"), 10, 64)
+	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	if !service.IsAllowed(userID, identifiant) {
 		c.JSON(401, gin.H{
 			"message": "you do not have the permission - you are not the owner of this user",
 		})
 		return
 	}
-	if error != nil {
+	/*if error != nil {
 		c.JSON(400,gin.H{
 			"message":"error",
 			"error": error.Error(),
 		})
 		return
-	}
+	}*/
 
 	var user entity.User
 	c.ShouldBind(&user)
@@ -98,20 +98,20 @@ func UpdateProfile(c *gin.Context) {
 
 func DeleteAccount(c *gin.Context) {
 	IDPage, _ := strconv.ParseUint(c.Param("id"), 10, 64)
-	userID, error := strconv.ParseUint(c.GetString("user_id"), 10, 64)
+	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	if !service.IsAllowed(userID, IDPage) {
 		c.JSON(401, gin.H{
 			"message": "you do not have the permission - you are not the owner of this user",
 		})
 		return
 	}
-	if error != nil {
+	/*if error != nil {
 		c.JSON(400,gin.H{
 			"message":"error",
 			"error": error.Error(),
 		})
 		return
-	}
+	}*/
 
 	err := service.DeleteAccount(userID)
 	if err != nil{
