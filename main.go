@@ -3,12 +3,9 @@ package main
 import (
 	"georeportapi/config"
 	"georeportapi/controller"
-	"georeportapi/entity"
 	"georeportapi/middleware"
 	"github.com/gin-gonic/gin"
 )
-
-var Users []entity.User
 
 func main() {
 	config.ConnectDB()

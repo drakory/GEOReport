@@ -1,9 +1,9 @@
 package repository
 
 import (
+	"errors"
 	"georeportapi/config"
 	"georeportapi/entity"
-	"errors"
 )
 
 func InsertUser(user entity.User) entity.User {
@@ -28,7 +28,7 @@ func GetUser(userID uint64) (entity.User, error) {
 	return user, errors.New("user do not exists")
 }
 
-func UpdateUser(user entity.User) (error) {
+func UpdateUser(user entity.User) error {
 	if _, err := GetUser(user.ID); err == nil {
 		config.Db.Save(&user)
 		config.Db.Find(&user)

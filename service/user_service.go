@@ -1,20 +1,16 @@
 package service
 
 import (
+	"errors"
 	"georeportapi/dto"
 	"georeportapi/entity"
 	"georeportapi/repository"
-	"errors"
-	"fmt"
-	"log"
-
 	"github.com/mashingan/smapping"
-	//"math/rand/v2"
+	"log"
 )
 
 func GetAllUsers() []dto.UserALLResponseDTO {
 	users := repository.GetAllUsers()
-	fmt.Println(users)
 	var usersResponse []dto.UserALLResponseDTO
 	for _, user := range users {
         var userResponse dto.UserALLResponseDTO
@@ -25,13 +21,6 @@ func GetAllUsers() []dto.UserALLResponseDTO {
         }
         usersResponse = append(usersResponse, userResponse)
     }
-	
-	/*err := smapping.FillStruct(&usersResponse, smapping.MapFields(&users))
-	if err != nil {
-		log.Fatal("failed to map to response ", err)
-		return usersResponse
-	}*/
-	fmt.Println(usersResponse)
 	return usersResponse
 }
 
@@ -58,7 +47,7 @@ func Profile(id uint64) (dto.UserIDResponseDTO,error) {
 	return userResponse, nil
 }
 
-func UpdateProfile(user entity.User, id uint64) (error){
+func UpdateProfile(user entity.User, id uint64) error {
 	user.ID=id
 	if err := repository.UpdateUser(user); err == nil{
 		return nil 
@@ -66,7 +55,7 @@ func UpdateProfile(user entity.User, id uint64) (error){
 	return errors.New("user do not exist")
 }
 
-func DeleteAccount(identifiant uint64) (error){
+func DeleteAccount(identifiant uint64) error {
 	if err := repository.DeleteUser(identifiant); err == nil{
 		return nil
 	}

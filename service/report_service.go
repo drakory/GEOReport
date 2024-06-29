@@ -1,13 +1,12 @@
 package service
 
 import (
+	"errors"
 	"georeportapi/dto"
 	"georeportapi/entity"
 	"georeportapi/repository"
-	"errors"
-	"log"
-
 	"github.com/mashingan/smapping"
+	"log"
 )
 
 func GetAllReports() []entity.Report {

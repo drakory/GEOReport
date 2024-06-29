@@ -3,8 +3,8 @@ package controller
 import (
 	"georeportapi/entity"
 	"georeportapi/service"
-	"strconv"
 	"github.com/gin-gonic/gin"
+	"strconv"
 )
 
 func GetAllUsers(c *gin.Context) {

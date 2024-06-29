@@ -1,9 +1,9 @@
 package repository
 
 import (
+	"errors"
 	"georeportapi/config"
 	"georeportapi/entity"
-	"errors"
 )
 
 func InsertReport(book entity.Report) entity.Report {
