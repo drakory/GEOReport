@@ -1,33 +1,33 @@
-#name: CI
+name: CI
 
-#on:
-  #push:
-  #  branches:
-  #    - main
-  #pull_request:
-  #  branches:
-  #    - main
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
-#jobs:
-#  go_build_test:
-#    runs-on: ubuntu-latest
+jobs:
+  go_build_test:
+    runs-on: ubuntu-latest
 
-#    steps:
-#      - name: Checkout code
-#        uses: actions/checkout@v3
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-#      - name: Set up Go
-#        uses: actions/setup-go@v4
-#        with:
-#          go-version: 1.22
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.22
 
-#      - name: Build
-#        run: go build -v ./...
+      - name: Build
+        run: go build -v ./...
 
-#      - name: Qodana Scan
-#        uses: JetBrains/qodana-action@v2024.1
-#        env:
-#          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
+      - name: Qodana Scan
+        uses: JetBrains/qodana-action@v2024.1
+        env:
+          QODANA_TOKEN: ${{ secrets.QODANA_TOKEN }}
 #      - name: Tests GO
 #        run: go test -v ./...
 
