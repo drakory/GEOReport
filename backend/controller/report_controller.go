@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"georeportapi/dto"
 	"georeportapi/service"
 	"strconv"
@@ -43,10 +44,18 @@ func InsertReport(c *gin.Context) {
 	
 	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	reportResponseDTO := service.InsertReport(reportDTO, userID)
-	c.JSON(200, gin.H{
+	fmt.Println(reportResponseDTO)
+	// Falta avisar o user que o report foi inserido com sucesso
+	/*c.HTML(201, "register_result.html", gin.H{
+        "Message": "Report registered successfully",
+        "User":    reportResponseDTO,
+    })*/
+	/*c.JSON(200, gin.H{
 		"message": "insert report",
 		"report": reportResponseDTO,
-	})
+	})*/
+
+	c.Redirect(303, "/georeport/report/")
 }
 
 func UpdateReport(c *gin.Context) {
@@ -108,14 +117,7 @@ func DeleteReport(c *gin.Context) {
 }
 
 func GetMyReports(c *gin.Context) {
-	reportID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
-	if !service.IsAllowedToEdit(userID, reportID) {
-		c.JSON(401, gin.H{
-			"message": "you do not have the permission - you are not the owner of this report",
-		})
-		return
-	}
 	c.JSON(200, gin.H{
 		"message": "select report",
 		"reports":   service.GetMyReports(userID),

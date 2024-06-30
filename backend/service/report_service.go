@@ -13,8 +13,19 @@ func GetAllReports() []entity.Report {
 	return repository.GetAllReports()
 }
 
-func GetMyReports(userID uint64) []entity.Report {
-	return repository.GetMyReports(userID)
+func GetMyReports(userID uint64) []dto.ReportResponseDTO {
+	reports := repository.GetMyReports(userID)
+	var reportsResponseDTO []dto.ReportResponseDTO
+	for _, report := range reports {
+        var reportResponseDTO dto.ReportResponseDTO
+        err := smapping.FillStruct(&reportResponseDTO, smapping.MapFields(&report))
+        if err != nil {
+            log.Fatal("failed to map to response ", err)
+			return reportsResponseDTO
+        }
+        reportsResponseDTO = append(reportsResponseDTO, reportResponseDTO)
+    }
+	return reportsResponseDTO
 }
 
 func InsertReport(reportDTO dto.ReportCreatedDTO, userID uint64) dto.ReportResponseDTO {
