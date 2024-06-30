@@ -27,6 +27,13 @@ func Authorized() gin.HandlerFunc {
 			return
 		}
 
+		/*for _, role := range allowedRoles {
+		    if user.Role == role {
+		        c.Next()
+		        return
+		    }
+		}*/
+
 		claims := token.Claims.(jwt.MapClaims)
 		c.Set("user_id", claims["user_id"])
 		c.Next()

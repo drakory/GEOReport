@@ -7,9 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// Homepage is a function that returns the user-specific information
-func Homepage(c *gin.Context) {
-
+func AuthorityHomepage(c *gin.Context) {
+	// Retrieve user ID from the context
 	userID, exists := c.Get("userID")
 	if !exists {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})

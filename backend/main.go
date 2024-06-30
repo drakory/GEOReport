@@ -19,6 +19,8 @@ func main() {
 		homepage := v1.Group("/homepage")
 		{
 			homepage.GET("/", controller.Homepage) // SEM AUTH
+			//penso que tenha de ser aqui esta route pls confirm
+			homepage.GET("/authority", middleware.Authorized(), controller.AuthorityHomepage) // SEM AUTH
 		}
 
 		auth := v1.Group("/auth")
@@ -28,7 +30,7 @@ func main() {
 
 		report := v1.Group("/report")
 		{
-			report.GET("/", middleware.Authorized(), controller.GetMyReports)                                       // SEM AUTH
+			report.GET("/", middleware.Authorized(), controller.GetMyReports)              // SEM AUTH
 			report.GET("/:id", controller.GetReport)                                       // SEM AUTH
 			report.POST("/reporting", middleware.Authorized(), controller.InsertReport)    // DTO IN -> AUTH -> DTO OUT
 			report.PUT("/update/:id", middleware.Authorized(), controller.UpdateReport)    // DTO IN -> AUTH + OWNER -> DTO OUT
@@ -46,6 +48,11 @@ func main() {
 		admin := v1.Group("/admin")
 		{
 			admin.GET("/reports", middleware.Authorized(), controller.GetAllReports) // AUTH -> DTO RESPONSE (ID, NAME, EMAIL)
+		}
+
+		authority := v1.Group("/authority")
+		{
+			authority.GET("/reports", middleware.Authorized(), controller.GetAllReports) // AUTH -> DTO RESPONSE (ID, NAME, EMAIL)
 		}
 		router.Run(":3000")
 	}
