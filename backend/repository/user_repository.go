@@ -12,12 +12,6 @@ func InsertUser(user entity.User) entity.User {
 	return user
 }
 
-func GetAllUsers() []entity.User {
-	var users []entity.User
-	config.Db.Find(&users)
-	return users
-}
-
 func GetUser(userID uint64) (entity.User, error) {
 	var user entity.User
 	config.Db.First(&user, userID)
