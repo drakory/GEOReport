@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"georeportapi/entity"
+	"georeportapi/repository"
 	"georeportapi/service"
 	"log"
 	"net/http"
@@ -10,7 +11,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func Authorized() gin.HandlerFunc {
+func Authorized(allowedRoles ...string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authHeader := c.GetHeader("Authorization")
 		if authHeader == "" {
@@ -27,39 +28,31 @@ func Authorized() gin.HandlerFunc {
 			})
 			return
 		}
-		// Extract claims from the token
-		claims, ok := token.Claims.(jwt.MapClaims)
+
+		claims := token.Claims.(jwt.MapClaims)
+		userID, ok := claims["user_id"].(uint64) // Assuming userID is stored as a string in token claims
 		if !ok {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"message": "failed to process request - invalid token claims",
-			})
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "user_id not found in token claims"})
 			return
 		}
 
-		// Extract user_id from claims
-		userID, ok := claims["user_id"].(uint64)
-		if !ok {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-				"message": "failed to process request - user_id not found in token claims",
-			})
-			return
-		}
+		// Retrieve user from the database or user service
+		user := repository.GetTheUserUsingID(userID) // GetUserByID needs to be implemented in your user service
 
-		//penso que vá ter de fazer um GetUserByID para por isto a funcionar
-		user, ok := userID.(entity.User)
-		if !ok {
-			c.JSON(http.StatusInternalServerError, gin.H{"error": "Invalid user type in context"})
-			return
-		}
-
+		// Check if the user's role is in the list of allowed roles
+		isAllowed := false
 		for _, role := range allowedRoles {
-			if user.Role == role {
-				c.Next()
-				return
+			if user.Role == entity.UserRole(role) {
+				isAllowed = true
+				break
 			}
 		}
 
-		claims := token.Claims.(jwt.MapClaims)
+		if !isAllowed {
+			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message": "Access denied - insufficient permissions"})
+			return
+		}
+
 		c.Set("user_id", claims["user_id"])
 		c.Next()
 	}

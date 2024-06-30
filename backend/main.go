@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	config.ConnectDB()
+	//config.ConnectDB()
 
 	defer config.CloseDb()
 
@@ -20,7 +20,7 @@ func main() {
 		{
 			homepage.GET("/", controller.Homepage) // SEM AUTH
 			//penso que tenha de ser aqui esta route pls confirm
-			homepage.GET("/authority", middleware.Authorized(), controller.AuthorityHomepage) // SEM AUTH
+			homepage.GET("/authority", middleware.Authorized("AUTHORITY"), controller.AuthorityHomepage) // AUTHORITY
 		}
 
 		auth := v1.Group("/auth")
@@ -39,8 +39,8 @@ func main() {
 
 		user := v1.Group("/user")
 		{
-			user.GET("/", middleware.Authorized(), controller.Profile) // O user so acede as suas proprias informaçoes              // AUTH - OWNER -> DTO RESPONSE (ID, NAME, EMAIL, PROFILE PICTURE)
-			user.POST("/registration", controller.Register)  // Falta autenticaçao depois do register e redirection to homepage    // SEM AUTH -> DTO IN -> DTO OUT
+			user.GET("/", middleware.Authorized(), controller.Profile)                    // O user so acede as suas proprias informaçoes              // AUTH - OWNER -> DTO RESPONSE (ID, NAME, EMAIL, PROFILE PICTURE)
+			user.POST("/registration", controller.Register)                               // Falta autenticaçao depois do register e redirection to homepage    // SEM AUTH -> DTO IN -> DTO OUT
 			user.PUT("/update/:id", middleware.Authorized(), controller.UpdateProfile)    // AUTH - OWNER
 			user.DELETE("/delete/:id", middleware.Authorized(), controller.DeleteAccount) // AUTH - OWNER
 		}
