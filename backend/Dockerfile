@@ -4,7 +4,7 @@ FROM golang:alpine
 ENV GIN_MODE=release
 ENV PORT=3000
 
-WORKDIR /go/src/GolangGinApi
+WORKDIR /go/src/GEOReport
 
 COPY go.mod .
 COPY go.sum .
