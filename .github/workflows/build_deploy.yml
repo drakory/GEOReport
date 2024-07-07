@@ -79,8 +79,11 @@ jobs:
 
       - name: Deploy to Remote Server
         run: | 
-          ssh -i temp_ssh_key -o StrictHostKeyChecking=no "cd ${{ secrets.PATH_GEOREPORT }} && docker-compose pull && docker-compose up -d"
-
+          ssh -i temp_ssh_key -o StrictHostKeyChecking=no ${{ secrets.USER_LINUX }}@${{ secrets.IP_LINUX }} << 'EOF'
+            cd ${{ secrets.PATH_GEOREPORT }}
+            docker-compose pull
+            docker-compose up -d
+        EOF
       - name: Remove temporary SSH key file
         run: |
           rm -f temp_ssh_key
