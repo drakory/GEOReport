@@ -47,10 +47,10 @@ jobs:
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
 
       - name: Check existence of docker-compose_server.yml
-        run: ls -l docker-compose_server.yml
+        run: ls -la
 
-      - name: Check content of docker-compose_server.yml
-        run: cat docker-compose_server.yml
+      - name: Actual path
+        run: pwd
 
       - name: Create temporary SSH key file
         run: |
