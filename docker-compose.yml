@@ -13,14 +13,16 @@ services:
       - 3306:5432   
   app:
     container_name: golang_container
-    build: .
+    build: 
+      context: ./backend
+    env_file:
+      - .env
     ports:
       - 3000:3000
     restart: on-failure
-    volumes:
-      - .:/app
     depends_on:
       - database
+
 volumes:
   postgres:
 

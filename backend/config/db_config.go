@@ -13,8 +13,10 @@ var Db *gorm.DB
 
 func ConnectDB() {
     err := godotenv.Load()
-    if err != nil {
-        panic("Error loading .env file")
+    if os.Getenv("DB_USERNAME") == "" {
+        if err != nil {
+            panic("Error loading .env file")
+        }
     }
 
     dbUser := os.Getenv("DB_USERNAME")
