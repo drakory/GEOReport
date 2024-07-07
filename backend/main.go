@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	//config.ConnectDB()
+	config.ConnectDB()
 
 	defer config.CloseDb()
 
