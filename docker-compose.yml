@@ -1,0 +1,43 @@
+version: '3.9'
+services:
+  database:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    restart: on-failure
+    volumes:
+     - ./postgres:/var/lib/postgresql/data
+    ports:
+      - 3306:5432   
+  app:
+    container_name: golang_container
+    build: .
+    ports:
+      - 3000:3000
+    restart: on-failure
+    volumes:
+      - .:/app
+    depends_on:
+      - database
+volumes:
+  postgres:
+
+  
+#  frontend:
+#    image: ${DOCKER_USERNAME}/georeport_react:latest
+#    build:
+#      context: ./frontend
+#      args:
+#        REACT_APP_API_URL: ${REACT_APP_API_URL}
+#    restart: always
+#    env_file:
+#      - .env
+#    ports:
+#      - "3000:80"
+#    depends_on:
+#      - backend
+#    profiles:
+#      - build
+#      - deploy

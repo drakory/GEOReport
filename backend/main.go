@@ -28,17 +28,17 @@ func main() {
 
 		report := v1.Group("/report")
 		{
-			report.GET("/", middleware.Authorized(), controller.GetMyReports)                                       // SEM AUTH
-			report.GET("/:id", controller.GetReport)                                       // SEM AUTH
-			report.POST("/reporting", middleware.Authorized(), controller.InsertReport)    // DTO IN -> AUTH -> DTO OUT
+			report.GET("/", middleware.Authorized(), controller.GetMyReports)  // DTO et AUTH OK                                      // SEM AUTH
+			report.GET("/:id", controller.GetReport)  // Ainda nao toquei   // SEM AUTH com DTO OUT
+			report.POST("/reportissue", middleware.Authorized(), controller.InsertReport)    // DTO IN -> AUTH -> DTO OUT
 			report.PUT("/update/:id", middleware.Authorized(), controller.UpdateReport)    // DTO IN -> AUTH + OWNER -> DTO OUT
 			report.DELETE("/delete/:id", middleware.Authorized(), controller.DeleteReport) // AUTH + OWNER
 		}
 
 		user := v1.Group("/user")
 		{
-			user.GET("/:id", middleware.Authorized(), controller.Profile)                 // AUTH - OWNER -> DTO RESPONSE (ID, NAME, EMAIL, PROFILE PICTURE)
-			user.POST("/registration", controller.Register)                               // SEM AUTH -> DTO IN -> DTO OUT
+			user.GET("/", middleware.Authorized(), controller.Profile) // O user so acede as suas proprias informaçoes              // AUTH - OWNER -> DTO RESPONSE (ID, NAME, EMAIL, PROFILE PICTURE)
+			user.POST("/registration", controller.Register)  // Falta autenticaçao depois do register e redirection to homepage    // SEM AUTH -> DTO IN -> DTO OUT
 			user.PUT("/update/:id", middleware.Authorized(), controller.UpdateProfile)    // AUTH - OWNER
 			user.DELETE("/delete/:id", middleware.Authorized(), controller.DeleteAccount) // AUTH - OWNER
 		}

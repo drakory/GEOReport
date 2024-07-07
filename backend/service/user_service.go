@@ -10,41 +10,24 @@ import (
 	"regexp"
 )
 
-func GetAllUsers() []dto.UserALLResponseDTO {
-	users := repository.GetAllUsers()
-	var usersResponse []dto.UserALLResponseDTO
-	for _, user := range users {
-        var userResponse dto.UserALLResponseDTO
-        err := smapping.FillStruct(&userResponse, smapping.MapFields(&user))
-        if err != nil {
-            log.Fatal("failed to map to response ", err)
-			return usersResponse
-        }
-        usersResponse = append(usersResponse, userResponse)
-    }
-	return usersResponse
-}
-
-func Register(userDTO dto.RegisterDTO) dto.UserIDResponseDTO {
+func Register(userDTO dto.RegisterDTO) {//dto.UserIDResponseDTO {
 	user := entity.User{}
 	userResponse := dto.UserIDResponseDTO{}
 
 	err := smapping.FillStruct(&user, smapping.MapFields(&userDTO))
 	if err != nil {
 		log.Fatal("failed to map ", err)
-		return userResponse
+		return //userResponse
 	}
-
-	//if !service.IsValidEmail(user.Email) {
 
 	user = repository.InsertUser(user)
 	err = smapping.FillStruct(&userResponse, smapping.MapFields(&user))
 	if err != nil {
 		log.Fatal("failed to map response DTO", err)
-		return userResponse
+		return //userResponse
 	}
 
-	return userResponse
+	//return userResponse
 }
 
 func Profile(id uint64) (dto.UserIDResponseDTO,error) {

@@ -4,19 +4,11 @@ import (
 	"georeportapi/dto"
 	"georeportapi/entity"
 	"georeportapi/service"
+	"log"
 	"strconv"
-
 	"github.com/gin-gonic/gin"
-	"time"
+	"github.com/mashingan/smapping"
 )
-
-func GetAllUsers(c *gin.Context) {
-	usersResponse := service.GetAllUsers()
-	c.JSON(200, gin.H{
-		"message": "select users",
-		"users": usersResponse,
-	})
-}
 
 func Register(c *gin.Context) {
 	var user dto.RegisterDTO
@@ -28,6 +20,13 @@ func Register(c *gin.Context) {
 		})
 		return
 	}
+	// Check if the email is valid and non used
+	if !service.IsValidEmail(user.Email) {
+		c.JSON(401, gin.H{
+			"message": "the email you fill is invalid",
+		})
+		return
+	}
 	if service.IsUsedEmail(user.Email) {
 		c.JSON(401, gin.H{
 			"message": "the email you fill is already used",
@@ -35,44 +34,32 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	if !service.IsValidEmail(user.Email) {
-		c.JSON(401, gin.H{
-			"message": "the email you fill is invalid",
-		})
+	//userResponse := 
+	service.Register(user)
+
+	var loginDTO dto.LoginDTO
+	err = smapping.FillStruct(&loginDTO, smapping.MapFields(&user))
+	if err != nil {
+		log.Fatal("failed to map to response ", err)
 		return
 	}
+	token, _ := service.Login(loginDTO) // Execute the Login function before the server response is sent
 
-	userResponse := service.Register(user)
-	c.JSON(200, gin.H{
+	// Add token in cookies
+	c.SetCookie("token", token, 3600, "/", "localhost", false, true)
+
+	/*c.JSON(200, gin.H{
 		"message": "Insert user",
 		"user" : userResponse,
-	})
+		"token": token,
+	})*/
 
-	wait := time.Duration(4) * time.Second	
-	time.Sleep(wait)
-	/*Login(c)
-
-	c.Redirect(303, "localhost:3000/georeport/homepage/")*/
+	c.Redirect(303, "/georeport/homepage/")
 }
 
 func Profile(c *gin.Context) {
-	identifiant, _ := strconv.ParseUint(c.Param("id"), 10,64)
 	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
-	if !service.IsAllowed(userID, identifiant) {
-		c.JSON(401, gin.H{
-			"message": "you do not have the permission - you are not the owner of this user",
-		})
-		return
-	}
-	/*if error != nil {
-		c.JSON(400,gin.H{
-			"message":"error",
-			"error": error.Error(),
-		})
-		return
-	}*/
-	
-	user, err := service.Profile(identifiant)
+	user, err := service.Profile(userID)
 	if err != nil {
 		c.JSON(404,gin.H{
 			"message":"error",
