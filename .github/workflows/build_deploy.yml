@@ -49,12 +49,6 @@ jobs:
           echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
 
-      - name: Actual path
-        run: ls -la
-
-      - name: Actual path
-        run: pwd
-
       - name: Create temporary SSH key file
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > temp_ssh_key
