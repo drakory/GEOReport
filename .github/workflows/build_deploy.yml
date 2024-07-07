@@ -83,7 +83,7 @@ jobs:
             cd ${{ secrets.PATH_GEOREPORT }}
             docker-compose pull
             docker-compose up -d
-        EOF
+          EOF
       - name: Remove temporary SSH key file
         run: |
           rm -f temp_ssh_key
