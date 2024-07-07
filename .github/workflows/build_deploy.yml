@@ -46,6 +46,12 @@ jobs:
           echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
 
+      - name: Check existence of docker-compose_server.yml
+        run: ls -l docker-compose_server.yml
+
+      - name: Check content of docker-compose_server.yml
+        run: cat docker-compose_server.yml
+
       - name: Create temporary SSH key file
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > temp_ssh_key
