@@ -37,6 +37,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
       - name: Creation .env
         run: |
           echo "DB_USERNAME=${{ secrets.DB_USERNAME }}" >> .env
@@ -45,9 +48,6 @@ jobs:
           echo "DB_PORT=${{ secrets.DB_PORT }}" >> .env
           echo "DB_HOST=${{ secrets.DB_HOST }}" >> .env
           echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-
-      - name: Check existence of docker-compose_server.yml
-        run: cd ..
 
       - name: Actual path
         run: ls -la
