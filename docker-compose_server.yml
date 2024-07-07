@@ -17,10 +17,13 @@ services:
     image: drakory/georeport_golang:latest
     restart: always
     env_file:
-      - .env
+      - /home/ubuntu/georeport/.env
     ports:
       - "8080:8080"
     depends_on:
       - postgres
+    volumes:
+      - /home/ubuntu/georeport/.env:/app/.env
+
 volumes:
   postgres:
