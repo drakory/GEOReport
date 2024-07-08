@@ -13,15 +13,9 @@ type RegisterDTO struct {
 	Password string `json:"password" form:"password,omitempty" validate:"min:6" binding:"required"`
 }
 
-type UserIDResponseDTO struct {
+type UserResponseDTO struct {
 	ID             uint64 `json:"id" form:"id"`
 	Name           string `json:"name" form:"name" binding:"required"`
 	Email          string `json:"email" form:"email" binding:"required,email"`
 	ProfilePicture string `json:"profile_picture" form:"profile_picture"`
-}
-
-type UserALLResponseDTO struct {
-	ID             uint64 `json:"id" form:"id"`
-	Name           string `json:"name" form:"name" binding:"required"`
-	Email          string `json:"email" form:"email" binding:"required,email"`
 }

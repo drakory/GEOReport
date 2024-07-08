@@ -34,9 +34,12 @@ func CreateToken(ID uint64) (string, error) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	err := godotenv.Load()
-	if err != nil {
-		panic("Error loading .env file")
-	}
+	if os.Getenv("DB_USERNAME") == "" {
+        if err != nil {
+            panic("Error loading .env file")
+        }
+    }
+
 	signature := os.Getenv("JWT_SECRET")
 
 	t, err := token.SignedString([]byte(signature))
@@ -51,8 +54,10 @@ func ValidateToken(token string) (*jwt.Token, error) {
 		}
 
 		err := godotenv.Load()
-		if err != nil {
-			panic("Error loading .env file")
+		if os.Getenv("DB_USERNAME") == "" {
+			if err != nil {
+				panic("Error loading .env file")
+			}
 		}
 		signature := os.Getenv("JWT_SECRET")
 		return []byte(signature), nil

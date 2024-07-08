@@ -2,7 +2,6 @@ package controller
 
 import (
 	"georeportapi/dto"
-	"georeportapi/entity"
 	"georeportapi/service"
 	"log"
 	"strconv"
@@ -74,34 +73,19 @@ func Profile(c *gin.Context) {
 }
 
 func UpdateProfile(c *gin.Context) {
-
-	identifiant, _ := strconv.ParseUint(c.Param("id"), 10,64)
 	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
-	if !service.IsAllowed(userID, identifiant) {
-		c.JSON(401, gin.H{
-			"message": "you do not have the permission - you are not the owner of this user",
-		})
-		return
-	}
-	/*if error != nil {
-		c.JSON(400,gin.H{
-			"message":"error",
-			"error": error.Error(),
-		})
-		return
-	}*/
 
-	var user entity.User
+	var user dto.UserUpdateDTO
 	c.ShouldBind(&user)
 	
-	err := service.UpdateProfile(user,identifiant)
+	userResponse, err := service.UpdateProfile(user, userID)
 	if err != nil {
 		c.JSON(404,gin.H{
 			"message":"User doesn't exist",
 		})
 	}
 	c.JSON(200, gin.H{
-		"message": "user updated using id" + c.Param("id"),
+		"message": userResponse,
 	})
 	
 }

@@ -16,7 +16,6 @@ type ReportResponseDTO struct {
 	Description string  	`gorm:"type:text" json:"description"`
 	Photos		string  	`gorm:"type:varchar(1024); default:'https://dl.acm.org/specs/products/acm/releasedAssets/images/cover-default--book.svg'" json:"photos"`
 	Status		string  	`gorm:"type:enum('pending', 'resolved');default:'pending'" json:"status"`
-	//UserID      uint64 		`json:"user_id,omitempty"`
 }
 
 type ReportUpdateDTO struct {
