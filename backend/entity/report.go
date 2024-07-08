@@ -11,9 +11,11 @@ type Report struct {
     Longitude   float64 	`gorm:"type:decimal(11,8)" json:"longitude"`
 	Description string  	`gorm:"type:text" json:"description"`
 	Photos		string  	`gorm:"type:varchar(1024); default:'https://dl.acm.org/specs/products/acm/releasedAssets/images/cover-default--book.svg'" json:"photos"`
-	Status		string  	`gorm:"type:varchar(150)" json:"status" default:"Pending"`
+	Status		string  	`gorm:"type:varchar(150)" json:"status"`
 	UserID     	uint64  	`gorm:"not null" json:"-"`
 	User        User   		`gorm:"foreignkey:UserID;constraint;onUpdate:CASCADE;onDelete:CASCADE" json:"user"`
 	CreatedAt   time.Time 	`gorm:"autoCreateTime" json:"created_at"`
     UpdatedAt   time.Time 	`gorm:"autoUpdateTime" json:"updated_at"`
 }
+
+// status commented but i need it to be implemented maybe has to be another entity since it's the admin who updates it

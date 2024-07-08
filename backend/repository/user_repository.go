@@ -22,13 +22,13 @@ func GetUser(userID uint64) (entity.User, error) {
 	return user, errors.New("user do not exists")
 }
 
-func UpdateUser(user entity.User) entity.User {
+func UpdateUser(user entity.User) error {
 	if _, err := GetUser(user.ID); err == nil {
 		config.Db.Save(&user)
 		config.Db.Find(&user)
-		return user
+		return nil
 	}
-	return user
+	return errors.New("user do not exists")
 }
 
 func DeleteUser(userID uint64) error {

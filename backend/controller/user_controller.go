@@ -2,6 +2,7 @@ package controller
 
 import (
 	"georeportapi/dto"
+	"georeportapi/entity"
 	"georeportapi/service"
 	"log"
 	"strconv"
@@ -73,33 +74,34 @@ func Profile(c *gin.Context) {
 }
 
 func UpdateProfile(c *gin.Context) {
-	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 
-	var user dto.UserUpdateDTO
+	identifiant, _ := strconv.ParseUint(c.Param("id"), 10,64)
+	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
+	if !service.IsAllowed(userID, identifiant) {
+		c.JSON(401, gin.H{
+			"message": "you do not have the permission - you are not the owner of this user",
+		})
+		return
+	}
+	/*if error != nil {
+		c.JSON(400,gin.H{
+			"message":"error",
+			"error": error.Error(),
+		})
+		return
+	}*/
+
+	var user entity.User
 	c.ShouldBind(&user)
 	
-	// Check if the email is valid and non used
-	if !service.IsValidEmail(user.Email) {
-		c.JSON(401, gin.H{
-			"message": "the email you fill is invalid",
-		})
-		return
-	}
-	if service.IsUsedEmail(user.Email) {
-		c.JSON(401, gin.H{
-			"message": "the email you fill is already used",
-		})
-		return
-	}
-
-	userResponse, err := service.UpdateProfile(user, userID)
+	err := service.UpdateProfile(user,identifiant)
 	if err != nil {
 		c.JSON(404,gin.H{
 			"message":"User doesn't exist",
 		})
 	}
 	c.JSON(200, gin.H{
-		"message": userResponse,
+		"message": "user updated using id" + c.Param("id"),
 	})
 	
 }
