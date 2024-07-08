@@ -78,6 +78,20 @@ func UpdateProfile(c *gin.Context) {
 	var user dto.UserUpdateDTO
 	c.ShouldBind(&user)
 	
+	// Check if the email is valid and non used
+	if !service.IsValidEmail(user.Email) {
+		c.JSON(401, gin.H{
+			"message": "the email you fill is invalid",
+		})
+		return
+	}
+	if service.IsUsedEmail(user.Email) {
+		c.JSON(401, gin.H{
+			"message": "the email you fill is already used",
+		})
+		return
+	}
+
 	userResponse, err := service.UpdateProfile(user, userID)
 	if err != nil {
 		c.JSON(404,gin.H{
