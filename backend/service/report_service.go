@@ -39,6 +39,7 @@ func InsertReport(reportDTO dto.ReportCreatedDTO, userID uint64) dto.ReportRespo
 	}
 
 	report.UserID = userID
+	report.Status = "Pending"
 	report = repository.InsertReport(report)
 
 	err = smapping.FillStruct(&reportResponse, smapping.MapFields(&report))
