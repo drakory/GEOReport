@@ -9,17 +9,26 @@ import (
 	"regexp"
 
 	"github.com/mashingan/smapping"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Register(userDTO dto.RegisterDTO) { //dto.UserIDResponseDTO {
 	user := entity.User{}
-	userResponse := dto.UserIDResponseDTO{}
+	userResponse := dto.UserResponseDTO{}
 
 	err := smapping.FillStruct(&user, smapping.MapFields(&userDTO))
 	if err != nil {
 		log.Fatal("failed to map ", err)
 		return //userResponse
 	}
+
+	// Hash da senha do usuário antes de inserir no banco de dados
+	hashedPassword, err := hashPassword(user.Password)
+	if err != nil {
+		log.Fatal("failed to hash password ", err)
+		return
+	}
+	user.Password = hashedPassword
 
 	user = repository.InsertUser(user)
 	err = smapping.FillStruct(&userResponse, smapping.MapFields(&user))
@@ -49,12 +58,33 @@ func Profile(id uint64) (dto.UserIDResponseDTO, error) {
 	return userResponse, nil
 }
 
-func UpdateProfile(user entity.User, id uint64) error {
-	user.ID = id
-	if err := repository.UpdateUser(user); err == nil {
-		return nil
+func UpdateProfile(userDTO dto.UserUpdateDTO, id uint64) (dto.UserResponseDTO, error) {
+	var user entity.User
+	var userResponse dto.UserResponseDTO
+
+	err := smapping.FillStruct(&user, smapping.MapFields(&userDTO))
+	if err != nil {
+		log.Fatal("failed to map to response ", err)
+		return userResponse, err
 	}
-	return errors.New("user do not exist")
+
+	// Hash da senha do usuário antes de inserir no banco de dados
+	hashedPassword, err := hashPassword(user.Password)
+	if err != nil {
+		log.Fatal("failed to hash password ", err)
+		return userResponse, err
+	}
+	user.Password = hashedPassword
+	user.ID = id
+	user = repository.UpdateUser(user)
+
+	err = smapping.FillStruct(&userResponse, smapping.MapFields(&user))
+	if err != nil {
+		log.Fatal("failed to map to response ", err)
+		return userResponse, err
+	}
+
+	return userResponse, nil
 }
 
 func DeleteAccount(identifiant uint64) error {
@@ -78,4 +108,10 @@ func IsUsedEmail(email string) bool {
 func IsValidEmail(email string) bool {
 	var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
 	return emailRegex.MatchString(email)
+}
+
+// Função para hash da senha
+func hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
 }

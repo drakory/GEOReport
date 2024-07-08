@@ -39,6 +39,7 @@ func CreateToken(ID uint64) (string, error) {
 			panic("Error loading .env file")
 		}
 	}
+
 	signature := os.Getenv("JWT_SECRET")
 
 	t, err := token.SignedString([]byte(signature))

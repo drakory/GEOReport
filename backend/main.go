@@ -41,7 +41,7 @@ func main() {
 		{
 			user.GET("/", middleware.Authorized(), controller.Profile)                    // O user so acede as suas proprias informaçoes              // AUTH - OWNER -> DTO RESPONSE (ID, NAME, EMAIL, PROFILE PICTURE)
 			user.POST("/registration", controller.Register)                               // Falta autenticaçao depois do register e redirection to homepage    // SEM AUTH -> DTO IN -> DTO OUT
-			user.PUT("/update/:id", middleware.Authorized(), controller.UpdateProfile)    // AUTH - OWNER
+			user.PUT("/update/", middleware.Authorized(), controller.UpdateProfile)       // AUTH - OWNER
 			user.DELETE("/delete/:id", middleware.Authorized(), controller.DeleteAccount) // AUTH - OWNER
 		}
 

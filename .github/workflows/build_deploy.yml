@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build_docker_images:
@@ -58,24 +55,6 @@ jobs:
         run: |
           scp -i temp_ssh_key -o StrictHostKeyChecking=no docker-compose_server.yml ${{ secrets.USER_LINUX }}@${{ secrets.IP_LINUX }}:${{ secrets.PATH_GEOREPORT }}/docker-compose.yml
           scp -i temp_ssh_key -o StrictHostKeyChecking=no .env ${{ secrets.USER_LINUX }}@${{ secrets.IP_LINUX }}:${{ secrets.PATH_GEOREPORT }}
-
-#      - name: Transfer docker-compose.yml
-#        uses: appleboy/scp-action@v0.1.3
-#        with:
-#          host: ${{ secrets.IP_LINUX }}
-#          username: ${{ secrets.USER_LINUX }}
-#          key: ${{ secrets.SSH_PRIVATE_KEY }}
-#          source: "docker-compose_server.yml"
-#          target: "${{ secrets.PATH_GEOREPORT }}"
-
-#      - name: Transfer .env
-#        uses: appleboy/scp-action@v0.1.3
-#        with:
-#          host: ${{ secrets.IP_LINUX }}
-#          username: ${{ secrets.USER_LINUX }}
-#          key: ${{ secrets.SSH_PRIVATE_KEY }}
-#          source: ".env"
-#          target: "${{ secrets.PATH_GEOREPORT }}/backend"
 
       - name: Deploy to Remote Server
         run: | 
