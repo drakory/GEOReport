@@ -30,9 +30,9 @@ func main() {
 
 		report := v1.Group("/report")
 		{
-			report.GET("/", middleware.Authorized(), controller.GetMyReports)              // SEM AUTH
-			report.GET("/:id", controller.GetReport)                                       // SEM AUTH
-			report.POST("/reporting", middleware.Authorized(), controller.InsertReport)    // DTO IN -> AUTH -> DTO OUT
+			report.GET("/", middleware.Authorized(), controller.GetMyReports)              // DTO et AUTH OK                                      // SEM AUTH
+			report.GET("/:id", controller.GetReport)                                       // Ainda nao toquei   // SEM AUTH com DTO OUT
+			report.POST("/reportissue", middleware.Authorized(), controller.InsertReport)  // DTO IN -> AUTH -> DTO OUT
 			report.PUT("/update/:id", middleware.Authorized(), controller.UpdateReport)    // DTO IN -> AUTH + OWNER -> DTO OUT
 			report.DELETE("/delete/:id", middleware.Authorized(), controller.DeleteReport) // AUTH + OWNER
 		}
@@ -47,12 +47,12 @@ func main() {
 
 		admin := v1.Group("/admin")
 		{
-			admin.GET("/reports", middleware.Authorized(), controller.GetAllReports) // AUTH -> DTO RESPONSE (ID, NAME, EMAIL)
+			admin.GET("/reports", middleware.Authorized("ADMIN", "AUTHORITY"), controller.GetAllReports) // AUTH -> DTO RESPONSE (ID, NAME, EMAIL)
 		}
 
 		authority := v1.Group("/authority")
 		{
-			authority.GET("/reports", middleware.Authorized(), controller.GetAllReports) // AUTH -> DTO RESPONSE (ID, NAME, EMAIL)
+			authority.GET("/reports", middleware.Authorized("ADMIN", "AUTHORITY"), controller.GetAllReports) // AUTH -> DTO RESPONSE (ID, NAME, EMAIL)
 		}
 		router.Run(":3000")
 	}

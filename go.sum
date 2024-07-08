@@ -1,0 +1,7 @@
+github.com/rgobbo/fileutils v1.0.2 h1:h/YIZx4fZUVxWhXQ5gCmUtO180HEFbGQdfrNacWsdxk=
+github.com/rgobbo/fileutils v1.0.2/go.mod h1:Fr+r2BHRpr6cSLqIPYyG/4PZzTQ+m+UE0i84Fnv7HxY=
+github.com/rgobbo/go-yarn v0.0.0-20180509170332-3eba059ee173 h1:jo5SCfh34oTt1njD2Tk9ThhXnPqQnZIktymyD8FXTyA=
+github.com/rgobbo/go-yarn v0.0.0-20180509170332-3eba059ee173/go.mod h1:GcZGuHuBacU5/WFy6MCkEL/r1b5FytU+XAjJ6jLoDg0=
+gopkg.in/check.v1 v0.0.0-20161208181325-20d25e280405/go.mod h1:Co6ibVJAznAaIkqp8huTwlJQCZ016jof/cbN4VW5Yz0=
+gopkg.in/yaml.v2 v2.4.0 h1:D8xgwECY7CYvx+Y2n4sBz93Jn9JRvxdiyyo8CTfuKaY=
+gopkg.in/yaml.v2 v2.4.0/go.mod h1:RDklbk79AGWmwhnvt/jBztapEOGDOx6ZbXqjP6csGnQ=

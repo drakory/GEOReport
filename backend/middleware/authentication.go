@@ -6,6 +6,7 @@ import (
 	"georeportapi/service"
 	"log"
 	"net/http"
+	"strconv"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
@@ -30,12 +31,18 @@ func Authorized(allowedRoles ...string) gin.HandlerFunc {
 		}
 
 		claims := token.Claims.(jwt.MapClaims)
-		userID, ok := claims["user_id"].(uint64) // Assuming userID is stored as a string in token claims
+		userIDStr, ok := claims["user_id"].(string) // Assuming userID is stored as a string in token claims
 		if !ok {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "user_id not found in token claims"})
 			return
 		}
 
+		userID, err := strconv.ParseUint(userIDStr, 10, 64) // Convert string to uint64
+		if err != nil {
+			log.Println("Error converting userID to uint64:", err)
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "invalid user_id format"})
+			return
+		}
 		// Retrieve user from the database or user service
 		user := repository.GetTheUserUsingID(userID) // GetUserByID needs to be implemented in your user service
 

@@ -6,6 +6,7 @@ import (
 	"georeportapi/service"
 	"log"
 	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/mashingan/smapping"
 )
@@ -14,9 +15,9 @@ func Register(c *gin.Context) {
 	var user dto.RegisterDTO
 	err := c.ShouldBind(&user)
 	if err != nil {
-		c.JSON(400,gin.H{
-			"message":"error",
-			"error": err.Error(),
+		c.JSON(400, gin.H{
+			"message": "error",
+			"error":   err.Error(),
 		})
 		return
 	}
@@ -34,7 +35,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	//userResponse := 
+	//userResponse :=
 	service.Register(user)
 
 	var loginDTO dto.LoginDTO
@@ -54,28 +55,28 @@ func Register(c *gin.Context) {
 		"token": token,
 	})*/
 
-	c.Redirect(303, "/georeport/homepage/")
+	//c.Redirect(303, "/georeport/homepage/")
 }
 
 func Profile(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	user, err := service.Profile(userID)
 	if err != nil {
-		c.JSON(404,gin.H{
-			"message":"error",
-			"error": err.Error(),
+		c.JSON(404, gin.H{
+			"message": "error",
+			"error":   err.Error(),
 		})
-		return 
+		return
 	}
 	c.JSON(200, gin.H{
 		"message": "select user searched using ID",
-		"user": user,
+		"user":    user,
 	})
 }
 
 func UpdateProfile(c *gin.Context) {
 
-	identifiant, _ := strconv.ParseUint(c.Param("id"), 10,64)
+	identifiant, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	if !service.IsAllowed(userID, identifiant) {
 		c.JSON(401, gin.H{
@@ -93,17 +94,17 @@ func UpdateProfile(c *gin.Context) {
 
 	var user entity.User
 	c.ShouldBind(&user)
-	
-	err := service.UpdateProfile(user,identifiant)
+
+	err := service.UpdateProfile(user, identifiant)
 	if err != nil {
-		c.JSON(404,gin.H{
-			"message":"User doesn't exist",
+		c.JSON(404, gin.H{
+			"message": "User doesn't exist",
 		})
 	}
 	c.JSON(200, gin.H{
 		"message": "user updated using id" + c.Param("id"),
 	})
-	
+
 }
 
 func DeleteAccount(c *gin.Context) {
@@ -124,15 +125,15 @@ func DeleteAccount(c *gin.Context) {
 	}*/
 
 	err := service.DeleteAccount(userID)
-	if err != nil{
-		c.JSON(404,gin.H{
-			"message":"User doesn't exist",
+	if err != nil {
+		c.JSON(404, gin.H{
+			"message": "User doesn't exist",
 			"error":   err.Error(),
 		})
-	}	
-		
+	}
+
 	c.JSON(200, gin.H{
 		"message": "Delete user using id" + c.Param("id"),
 	})
-	
+
 }
