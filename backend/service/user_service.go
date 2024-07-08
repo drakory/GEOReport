@@ -8,6 +8,7 @@ import (
 	"github.com/mashingan/smapping"
 	"log"
 	"regexp"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func Register(userDTO dto.RegisterDTO) {//dto.UserIDResponseDTO {
@@ -19,6 +20,14 @@ func Register(userDTO dto.RegisterDTO) {//dto.UserIDResponseDTO {
 		log.Fatal("failed to map ", err)
 		return //userResponse
 	}
+
+	// Hash da senha do usuário antes de inserir no banco de dados
+	hashedPassword, err := hashPassword(user.Password)
+	if err != nil {
+		log.Fatal("failed to hash password ", err)
+		return
+	}
+	user.Password = hashedPassword
 
 	user = repository.InsertUser(user)
 	err = smapping.FillStruct(&userResponse, smapping.MapFields(&user))
@@ -58,6 +67,13 @@ func UpdateProfile(userDTO dto.UserUpdateDTO, id uint64) (dto.UserResponseDTO,er
 		return userResponse, err
 	}
 
+	// Hash da senha do usuário antes de inserir no banco de dados
+	hashedPassword, err := hashPassword(user.Password)
+	if err != nil {
+		log.Fatal("failed to hash password ", err)
+		return userResponse, err
+	}
+	user.Password = hashedPassword
 	user.ID = id
 	user = repository.UpdateUser(user);
 
@@ -91,4 +107,10 @@ func IsUsedEmail(email string) bool {
 func IsValidEmail(email string) bool {
     var emailRegex = regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`)
     return emailRegex.MatchString(email)
+}
+
+// Função para hash da senha
+func hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
+	return string(bytes), err
 }
