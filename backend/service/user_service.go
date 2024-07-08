@@ -40,9 +40,9 @@ func Register(userDTO dto.RegisterDTO) { //dto.UserIDResponseDTO {
 	//return userResponse
 }
 
-func Profile(id uint64) (dto.UserIDResponseDTO, error) {
+func Profile(id uint64) (dto.UserResponseDTO, error) {
 
-	userResponse := dto.UserIDResponseDTO{}
+	userResponse := dto.UserResponseDTO{}
 
 	user, err := repository.GetUser(id)
 	if err != nil {
