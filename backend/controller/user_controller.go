@@ -34,7 +34,6 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	//userResponse :=
 	service.Register(user)
 
 	var loginDTO dto.LoginDTO
@@ -48,13 +47,10 @@ func Register(c *gin.Context) {
 	// Add token in cookies
 	c.SetCookie("token", token, 3600, "/", "localhost", false, true)
 
-	/*c.JSON(200, gin.H{
-		"message": "Insert user",
-		"user" : userResponse,
+	c.JSON(200, gin.H{
+		"message": "User registered successfully",
 		"token": token,
-	})*/
-
-	//c.Redirect(303, "/georeport/homepage/")
+	})
 }
 
 func Profile(c *gin.Context) {
@@ -106,21 +102,24 @@ func UpdateProfile(c *gin.Context) {
 }
 
 func DeleteAccount(c *gin.Context) {
-	IDPage, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
-	if !service.IsAllowed(userID, IDPage) {
-		c.JSON(401, gin.H{
-			"message": "you do not have the permission - you are not the owner of this user",
+
+	err := service.DeleteAccount(userID)
+	if err != nil {
+		c.JSON(404, gin.H{
+			"message": "User doesn't exist",
+			"error":   err.Error(),
 		})
-		return
 	}
-	/*if error != nil {
-		c.JSON(400,gin.H{
-			"message":"error",
-			"error": error.Error(),
-		})
-		return
-	}*/
+
+	c.JSON(200, gin.H{
+		"message": "Delete user using id" + c.Param("id"),
+	})
+
+}
+
+func DeleteAccountByAdmin(c *gin.Context) {
+	userID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 
 	err := service.DeleteAccount(userID)
 	if err != nil {

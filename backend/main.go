@@ -62,13 +62,14 @@ func main() {
 			user.GET("/", middleware.Authorized(), controller.Profile)                    // O user so acede as suas proprias informaçoes              // AUTH - OWNER -> DTO RESPONSE (ID, NAME, EMAIL, PROFILE PICTURE)
 			user.POST("/registration", controller.Register)                               // Falta autenticaçao depois do register e redirection to homepage    // SEM AUTH -> DTO IN -> DTO OUT
 			user.PUT("/update/", middleware.Authorized(), controller.UpdateProfile)       // AUTH - OWNER
-			user.DELETE("/delete/:id", middleware.Authorized(), controller.DeleteAccount) // AUTH - OWNER
+			user.DELETE("/delete/", middleware.Authorized(), controller.DeleteAccount) // AUTH - OWNER
 		}
 
 		admin := v1.Group("/admin")
 		{
 			admin.GET("/reports", middleware.Authorized("ADMIN", "AUTHORITY"), controller.GetAllReports)          // AUTH -> DTO RESPONSE (ID, NAME, EMAIL)
 			admin.PUT("/updaterole/:id", middleware.Authorized("ADMIN", "AUTHORITY"), controller.AdminChangeUserRole) // AUTH -> DTO IN -> DTO OUT
+			admin.PUT("/delete/:id", middleware.Authorized("ADMIN"), controller.DeleteAccountByAdmin) // AUTH -> DTO IN -> DTO OUT
 		}
 
 		authority := v1.Group("/authority")
