@@ -35,10 +35,10 @@ func CreateToken(ID uint64) (string, error) {
 
 	err := godotenv.Load()
 	if os.Getenv("DB_USERNAME") == "" {
-        if err != nil {
-            panic("Error loading .env file")
-        }
-    }
+		if err != nil {
+			panic("Error loading .env file")
+		}
+	}
 
 	signature := os.Getenv("JWT_SECRET")
 

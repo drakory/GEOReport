@@ -1,10 +1,8 @@
-FROM golang:alpine
-
-
+FROM golang:1.22-alpine
 ENV GIN_MODE=release
 ENV PORT=3000
 
-WORKDIR /go/src/GolangGinApi
+WORKDIR /app
 
 COPY go.mod .
 COPY go.sum .

@@ -13,6 +13,13 @@ func GetAllReports() []entity.Report {
 	return reports
 }
 
+func GetAllReportsResolved() []entity.Report {
+	var reports []entity.Report
+	config.Db.Preload("User").Where("status = ?", "resolved").Find(&reports)
+
+	return reports
+}
+
 func GetReport(reportID uint64) (entity.Report, error) {
 	var report entity.Report
 	config.Db.Preload("User").First(&report, reportID)
@@ -31,12 +38,34 @@ func InsertReport(report entity.Report) entity.Report {
 }
 
 func UpdateReport(report entity.Report) (entity.Report, error) {
-	if report , err := GetReport(report.ID); err == nil {
-		config.Db.Save(&report)
-		config.Db.Preload("User").Find(&report)
-		return report, nil
+	existingReport, err := GetReport(report.ID)
+	if err != nil {
+		return report, errors.New("report does not exist")
 	}
-	return report, errors.New("report do not exists")
+	// Update only the necessary fields
+	existingReport.Type = report.Type
+	existingReport.Description = report.Description
+	existingReport.Photos = report.Photos
+	// Save the updated report back to the database
+	config.Db.Save(&existingReport)
+	// Preload the User and find the updated report
+	config.Db.Preload("User").Find(&existingReport)
+	return existingReport, nil
+}
+
+func UpdateReportByAuthority(report entity.Report) (entity.Report, error) {
+	existingReport, err := GetReport(report.ID)
+	if err != nil {
+		return report, errors.New("report does not exist")
+	}
+	// Update only the necessary fields
+	existingReport.Status = report.Status
+	existingReport.AuthorityComment = report.AuthorityComment
+	// Save the updated report back to the database
+	config.Db.Save(&existingReport)
+	// Preload the User and find the updated report
+	config.Db.Preload("User").Find(&existingReport)
+	return existingReport, nil
 }
 
 func DeleteReport(reportID uint64) error {

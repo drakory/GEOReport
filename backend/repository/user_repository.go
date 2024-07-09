@@ -47,7 +47,7 @@ func GetTheUserUsingID(userID uint64) entity.User {
 	return user
 }
 
-func GetUserByEmail(email string) entity.User{
+func GetUserByEmail(email string) entity.User {
 	var user entity.User
 	config.Db.Where("email = ?", email).First(&user)
 	return user

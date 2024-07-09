@@ -1,2 +1,5 @@
 .env
 /tmp
+yarn.lock
+main.exe
+package.json

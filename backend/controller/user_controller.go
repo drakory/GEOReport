@@ -5,6 +5,7 @@ import (
 	"georeportapi/service"
 	"log"
 	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/mashingan/smapping"
 )
@@ -13,9 +14,9 @@ func Register(c *gin.Context) {
 	var user dto.RegisterDTO
 	err := c.ShouldBind(&user)
 	if err != nil {
-		c.JSON(400,gin.H{
-			"message":"error",
-			"error": err.Error(),
+		c.JSON(400, gin.H{
+			"message": "error",
+			"error":   err.Error(),
 		})
 		return
 	}
@@ -33,7 +34,7 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	//userResponse := 
+	//userResponse :=
 	service.Register(user)
 
 	var loginDTO dto.LoginDTO
@@ -53,22 +54,22 @@ func Register(c *gin.Context) {
 		"token": token,
 	})*/
 
-	c.Redirect(303, "/georeport/homepage/")
+	//c.Redirect(303, "/georeport/homepage/")
 }
 
 func Profile(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	user, err := service.Profile(userID)
 	if err != nil {
-		c.JSON(404,gin.H{
-			"message":"error",
-			"error": err.Error(),
+		c.JSON(404, gin.H{
+			"message": "error",
+			"error":   err.Error(),
 		})
-		return 
+		return
 	}
 	c.JSON(200, gin.H{
 		"message": "select user searched using ID",
-		"user": user,
+		"user":    user,
 	})
 }
 
@@ -77,7 +78,7 @@ func UpdateProfile(c *gin.Context) {
 
 	var user dto.UserUpdateDTO
 	c.ShouldBind(&user)
-	
+
 	// Check if the email is valid and non used
 	if !service.IsValidEmail(user.Email) {
 		c.JSON(401, gin.H{
@@ -94,14 +95,14 @@ func UpdateProfile(c *gin.Context) {
 
 	userResponse, err := service.UpdateProfile(user, userID)
 	if err != nil {
-		c.JSON(404,gin.H{
-			"message":"User doesn't exist",
+		c.JSON(404, gin.H{
+			"message": "User doesn't exist",
 		})
 	}
 	c.JSON(200, gin.H{
 		"message": userResponse,
 	})
-	
+
 }
 
 func DeleteAccount(c *gin.Context) {
@@ -122,15 +123,15 @@ func DeleteAccount(c *gin.Context) {
 	}*/
 
 	err := service.DeleteAccount(userID)
-	if err != nil{
-		c.JSON(404,gin.H{
-			"message":"User doesn't exist",
+	if err != nil {
+		c.JSON(404, gin.H{
+			"message": "User doesn't exist",
 			"error":   err.Error(),
 		})
-	}	
-		
+	}
+
 	c.JSON(200, gin.H{
 		"message": "Delete user using id" + c.Param("id"),
 	})
-	
+
 }
