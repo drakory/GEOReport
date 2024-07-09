@@ -22,24 +22,18 @@ services:
     restart: on-failure
     depends_on:
       - database
+  react:
+    container_name: react_container
+    build:
+      context: ./frontend
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - app
+      - database
 
 volumes:
   postgres:
-
-  
-#  frontend:
-#    image: ${DOCKER_USERNAME}/georeport_react:latest
-#    build:
-#      context: ./frontend
-#      args:
-#        REACT_APP_API_URL: ${REACT_APP_API_URL}
-#    restart: always
-#    env_file:
-#      - .env
-#    ports:
-#      - "3000:80"
-#    depends_on:
-#      - backend
-#    profiles:
-#      - build
-#      - deploy

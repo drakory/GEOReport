@@ -1,6 +1,8 @@
 FROM node:14-alpine
 WORKDIR /app
 
+ENV PORT=8080
+
 COPY package.json .
 COPY *.lock .
 
@@ -8,6 +10,6 @@ RUN npm install
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE ${PORT}
 
 CMD ["npm", "start"]

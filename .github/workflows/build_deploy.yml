@@ -24,11 +24,12 @@ jobs:
 
       - name: Build Docker image
         run: docker build -f ./backend/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/georeport_golang ./backend
+        run: docker build -f ./frontend/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/georeport_react ./frontend
 
       - name: Push Docker image
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/georeport_golang
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/georeport_react
 
-  
   deploy_app:
     needs: build_docker_images
     runs-on: ubuntu-latest
@@ -66,13 +67,3 @@ jobs:
       - name: Remove temporary SSH key file
         run: |
           rm -f temp_ssh_key
-
-#- name: Deploy Docker containers
-#  run: |
-#    ssh -o StrictHostKeyChecking=no @ << 'EOF'
-#      docker stop go_geo_report || true
-#      docker rm go_geo_report || true
-#      docker-compose -f /home/${{ secrets.USER_LINUX }}/go_geo_report/docker-compose.yml up -d
-#    EOF
-#docker pull ${{ secrets.DOCKERHUB_USERNAME }}/go_geo_report:latest
-#docker run -d --name go_geo_report -p 80:80 ${{ secrets.DOCKERHUB_USERNAME }}/go_geo_report:latest
