@@ -4,11 +4,12 @@ import {
   ReportType,
   ReportImage,
   ReportDescription,
-  ReportCoordinates   
+  ReportCoordinates,
+  ReportStatus   
 } from "./styles";
 //import Axios from "axios";
 
-const Report = ({ type, image, description, id, latitude, longitude }) => {
+const Report = ({ type, image, description, id, latitude, longitude, status }) => {
   //const token = sessionStorage.getItem("token");
   //const isLoggedIn = token !== null;
 
@@ -39,6 +40,7 @@ const Report = ({ type, image, description, id, latitude, longitude }) => {
           <ReportCoordinates>
             Lat: {latitude}, Lng: {longitude}
           </ReportCoordinates>
+          <ReportStatus>{status}</ReportStatus>
         </ReportCard>
     </ListContainer>
     </>

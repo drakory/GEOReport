@@ -22,6 +22,11 @@ export const ReportType = styled.h3`
   color: #333;
 `;
 
+export const ReportStatus = styled.h3`
+  margin: 0 0 10px 0;
+  color: #333;
+`;
+
 export const ReportImage = styled.img`
   width: 100%;
   height: auto;

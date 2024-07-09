@@ -84,6 +84,7 @@ const MyReports = () => {
                   image={report.photos}
                   latitude={report.latitude}
                   longitude={report.longitude}
+                  status={report.status}
                 />
               </div>
             ))}
