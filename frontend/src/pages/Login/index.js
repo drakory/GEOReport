@@ -55,11 +55,11 @@ const Login = () => {
 
     } catch (error) {
       sessionStorage.removeItem("token");
+      console.error("Error response:", error.response);
       setLogin(false);
-
-      console.log(error);
-      toast.error(error.response.data.message, {
-        position: toast.POSITION.TOP_RIGHT,
+      const errorMessage = error.response?.data?.message || "Login failed. Please try again.";
+      toast.error(errorMessage, {
+        position: "top-right",
       });
       console.log("user is invalid!");
     }
@@ -74,7 +74,6 @@ const Login = () => {
     <>
       <Header />
       <ContainerFormLogin>
-        <ToastContainer />
         <FormLogin onSubmit={handleSubmit}>
           <InputProfile
             placeholder="Email"
@@ -102,6 +101,7 @@ const Login = () => {
           </ContainerAllButtons>
         </FormLogin>
       </ContainerFormLogin>
+      <ToastContainer />
       <Footer />
     </>
   );

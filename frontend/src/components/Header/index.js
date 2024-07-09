@@ -46,7 +46,7 @@ const Header = () => {
             {isLoggedIn ? (
               <>
                 <ButtonLogout onClick={logout}>Logout</ButtonLogout>
-                <Button onClick={() => navigate("/allusers")}>All Users</Button>
+                <Button onClick={() => navigate("/myreports")}>My Reports</Button>
                 <Button onClick={() => navigate("/reportIssue")}>Report Issue</Button>
                 <a title="Your Profile" href="/profile">
                   <ProfileIcon src={profile} alt="Profile icon" />
@@ -55,7 +55,6 @@ const Header = () => {
             ) : (
               <>
                 <ButtonLogin onClick={login}>Login</ButtonLogin>
-                <ButtonLogin onClick={gallery}>Gallery</ButtonLogin>
               </>
             )}
           </ContainerMenu>

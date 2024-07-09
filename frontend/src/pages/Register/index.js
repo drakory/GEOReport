@@ -3,6 +3,8 @@ import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import Axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import {
   ContainerBook,
@@ -42,6 +44,10 @@ const Register = () => {
       navigate("/");
     } catch (error) {
       console.log(error);
+      const errorMessage = error.response?.data?.message || "Registration failed. Please try again.";
+      toast.error(errorMessage, {
+        position: "top-right",
+      });
     }
   }
 
@@ -49,6 +55,7 @@ const Register = () => {
     <>
       <Header />
       <ContainerBook>
+        <ToastContainer />
         <ContainerInfosBook onSubmit={addUser}>
           <ContainerInputs>
             <InputEditBook
@@ -63,7 +70,7 @@ const Register = () => {
               name="titleBook"
               placeholder="Insert email"
               type="text"
-              id="add_password"
+              id="add_email"
               required
               ref={email}
             />
@@ -77,14 +84,14 @@ const Register = () => {
             <InputEditBook
               name="titleBook"
               placeholder="Insert password"
-              type="text"
+              type="password" 
               id="add_password"
               required
               ref={password}
             />
           </ContainerInputs>
           <ContainerButtonAdd>
-            <ButtonAddBook>Add</ButtonAddBook>
+            <ButtonAddBook type="submit">Add</ButtonAddBook>
           </ContainerButtonAdd>
         </ContainerInfosBook>
       </ContainerBook>

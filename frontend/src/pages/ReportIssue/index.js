@@ -7,6 +7,8 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaf
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import styled from "styled-components";
+import { ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 import {
   ContainerBook,
@@ -21,7 +23,6 @@ import {
   FormWrapper
 } from "./styles";
 
-// Ensure Leaflet images are being loaded correctly
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
@@ -30,8 +31,8 @@ L.Icon.Default.mergeOptions({
 });
 
 const center = {
-  lat: 51.505,
-  lng: -0.09,
+  lat: 41.1579,
+  lng: -8.6291,
 };
 
 function DraggableMarker({ position, setPosition }) {
@@ -82,9 +83,7 @@ function ClickableMap({ setPosition }) {
 const ReportIssue = () => {
   const navigate = useNavigate();
 
-  const title = useRef();
-  const latitude = useRef();
-  const longitude = useRef();
+  const type = useRef();
   const description = useRef();
   const image = useRef();
 
@@ -96,7 +95,7 @@ const ReportIssue = () => {
     console.log("add report");
 
     const reportData = {
-      Type: title.current.value,
+      Type: type.current.value,
       Photos: image.current.value,
       Description: description.current.value,
       Latitude: position.lat,
@@ -111,6 +110,7 @@ const ReportIssue = () => {
       await Axios.post(url, JSON.stringify(reportData), {
         headers: { "Content-Type": "application/json", Authorization: token },
       });
+      toast.success("Report added successfully!");
       console.log("SUCESS!!")
     } catch (error) {
       console.log(error);
@@ -136,12 +136,12 @@ const ReportIssue = () => {
             <ContainerInfosBook onSubmit={addReport}>
               <ContainerInputs>
                 <InputEditBook
-                  name="name"
-                  placeholder="Insert Title"
+                  name="type"
+                  placeholder="Insert Type"
                   type="text"
-                  id="add_title"
+                  id="add_type"
                   required
-                  ref={title}
+                  ref={type}
                 />
                 <InputEditBook
                   name="Report image"
@@ -168,6 +168,7 @@ const ReportIssue = () => {
         </FormWrapper>
       </MainContainer>
       <Footer />
+      <ToastContainer />
     </>
   );
 };

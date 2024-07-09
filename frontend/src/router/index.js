@@ -8,6 +8,7 @@ import Login from "../pages/Login";
 import Profile from "../pages/Profile";
 import AllUsers from "../pages/AllUsers";
 import Register from "../pages/Register";
+import MyReports  from "../pages/MyReports";
 
 const Router = () => {
   return (
@@ -20,6 +21,7 @@ const Router = () => {
         <Route path="profile" element={<Profile />} />
         <Route path="allusers" element={<AllUsers />} />
         <Route path="register" element={<Register />} />
+        <Route path="myreports" element={<MyReports />} />
       </Routes>
     </BrowserRouter>
   );
