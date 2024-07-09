@@ -46,19 +46,22 @@ func Authorized(allowedRoles ...string) gin.HandlerFunc {
 		// Retrieve user from the database or user service
 		user := repository.GetTheUserUsingID(userID) // GetUserByID needs to be implemented in your user service
 
-		// Check if the user's role is in the list of allowed roles
-		isAllowed := false
-		for _, role := range allowedRoles {
-			if user.Role == entity.UserRole(role) {
-				isAllowed = true
-				break
+		if(allowedRoles != nil){
+			// Check if the user's role is in the list of allowed roles
+			isAllowed := false
+			for _, role := range allowedRoles {
+				if user.Role == entity.UserRole(role) {
+					isAllowed = true
+					break
+				}
+			}
+
+			if !isAllowed {
+				c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message": "Access denied - insufficient permissions"})
+				return
 			}
 		}
-
-		if !isAllowed {
-			c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"message": "Access denied - insufficient permissions"})
-			return
-		}
+		
 
 		c.Set("user_id", claims["user_id"])
 		c.Next()

@@ -1,11 +1,12 @@
-import { ContainerFooter } from './style.css';
+import { ContainerFooter } from "./styles";
 
 const Footer = () => {
-    return (
-        <ContainerFooter>
-            <p>Made By People</p>
-        </ContainerFooter>
-    );
-    };
+  const year = new Date().getFullYear();
+  return (
+    <ContainerFooter>
+      <p>Made with ♥ using React © {year}</p>
+    </ContainerFooter>
+  );
+};
 
 export default Footer;

@@ -8,12 +8,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+func CORSMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		c.Header("Access-Control-Allow-Origin", "*")
+		c.Header("Access-Control-Allow-Credentials", "true")
+		c.Header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
+		c.Header("Access-Control-Allow-Methods", "POST,HEAD,PATCH, OPTIONS, GET, PUT, DELETE")
+
+		if c.Request.Method == "OPTIONS" {
+			c.AbortWithStatus(204)
+			return
+		}
+
+		c.Next()
+	}
+}
+
 func main() {
 	config.ConnectDB()
 
 	defer config.CloseDb()
 
 	router := gin.Default()
+	router.Use(CORSMiddleware())
 	v1 := router.Group("/georeport")
 	{
 		homepage := v1.Group("/homepage")
@@ -52,7 +70,8 @@ func main() {
 
 		authority := v1.Group("/authority")
 		{
-			authority.GET("/reports", middleware.Authorized("ADMIN", "AUTHORITY"), controller.GetAllReports) // AUTH -> DTO RESPONSE (ID, NAME, EMAIL)
+			authority.GET("/reports", middleware.Authorized("ADMIN", "AUTHORITY"), controller.GetAllReports)     // AUTH -> DTO RESPONSE (ID, NAME, EMAIL)
+			authority.PUT("/update/:id", middleware.Authorized("AUTHORITY"), controller.UpdateReportByAuthority) // AUTH -> DTO IN -> DTO OUT
 		}
 		router.Run(":3000")
 	}

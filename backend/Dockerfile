@@ -1,6 +1,4 @@
-FROM golang:alpine
-
-
+FROM golang:1.22-alpine
 ENV GIN_MODE=release
 ENV PORT=3000
 

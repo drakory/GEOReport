@@ -2,6 +2,7 @@ package service
 
 import (
 	"errors"
+	"fmt"
 	"georeportapi/dto"
 	"georeportapi/entity"
 	"georeportapi/repository"
@@ -80,6 +81,32 @@ func UpdateReport(reportDTO dto.ReportUpdateDTO, reportID uint64, userID uint64)
 	report.UserID = userID
 	report.ID = reportID
 	report, _ = repository.UpdateReport(report)
+
+	err = smapping.FillStruct(&reportResponse, smapping.MapFields(&report))
+	if err != nil {
+		log.Fatal("failed to map to response ", err)
+		return reportResponse, err
+	}
+
+	return reportResponse, nil
+}
+
+func UpdateReportByAuthority(reportDTO dto.ReportAuthorityUpdateDTO, reportID uint64, userID uint64) (dto.ReportResponseDTO, error) {
+	report := entity.Report{}
+	reportResponse := dto.ReportResponseDTO{}
+
+	err := smapping.FillStruct(&report, smapping.MapFields(&reportDTO))
+	if err != nil {
+		log.Fatal("failed to map ", err)
+		return reportResponse, err
+	}
+
+	report.UserID = userID
+	report.ID = reportID
+	report, _ = repository.UpdateReport(report)
+
+	fmt.Println("reportDTO: ", reportDTO)
+	fmt.Println("\n", reportResponse)
 
 	err = smapping.FillStruct(&reportResponse, smapping.MapFields(&report))
 	if err != nil {

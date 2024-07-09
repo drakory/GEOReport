@@ -94,6 +94,41 @@ func UpdateReport(c *gin.Context) {
 	})
 }
 
+func UpdateReportByAuthority(c *gin.Context) {
+	// Verificaçao de permissao
+	reportID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
+	if !service.IsAllowedToEdit(userID, reportID) {
+		c.JSON(401, gin.H{
+			"message": "you do not have the permission - you are not the owner of this report",
+		})
+		return
+	}
+	// Atualizaçao do report
+	var reportDTO dto.ReportAuthorityUpdateDTO
+	err := c.ShouldBind(&reportDTO)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"message": "error",
+			"error":   err.Error(),
+		})
+		return
+	}
+	fmt.Println(reportDTO)
+	reportResponseDTO, err := service.UpdateReportByAuthority(reportDTO, reportID, userID)
+	if err != nil {
+		c.JSON(404, gin.H{
+			"message": "error",
+			"error":   err.Error(),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"message": "update report",
+		"report":    reportResponseDTO,
+	})
+}
+
 func DeleteReport(c *gin.Context) {
 	// Verificaçao de permissao
 	reportID, _ := strconv.ParseUint(c.Param("id"), 10, 64)

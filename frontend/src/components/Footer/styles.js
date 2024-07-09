@@ -1,12 +1,17 @@
-import styles from 'styled-components';
+import styled from "styled-components";
 
-export const Container = styles.div`
-    background: #f8f8f8;
-    height: 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    color: #333;
-    border-top: 1px solid #e0e0e0;
+export const ContainerFooter = styled.div`
+  background-color: #fdc544;
+  color: #000;
+  font-family: "Anton", sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 60px;
+  margin-top: 60px;
+  bottom: 0;
+  position: fixed;
+  width: 100%;
+  position: relative;
 `;

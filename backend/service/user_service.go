@@ -22,14 +22,6 @@ func Register(userDTO dto.RegisterDTO) { //dto.UserIDResponseDTO {
 		return //userResponse
 	}
 
-	// Hash da senha do usuário antes de inserir no banco de dados
-	hashedPassword, err := hashPassword(user.Password)
-	if err != nil {
-		log.Fatal("failed to hash password ", err)
-		return
-	}
-	user.Password = hashedPassword
-
 	user = repository.InsertUser(user)
 	err = smapping.FillStruct(&userResponse, smapping.MapFields(&user))
 	if err != nil {
