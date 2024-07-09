@@ -1,5 +1,9 @@
 package dto
 
+import (
+	"georeportapi/entity"
+)
+
 type UserUpdateDTO struct {
 	Name           string `json:"name" form:"name" binding:"required"`
 	Email          string `json:"email" form:"email" binding:"required,email"`
@@ -18,4 +22,9 @@ type UserResponseDTO struct {
 	Name           string `json:"name" form:"name" binding:"required"`
 	Email          string `json:"email" form:"email" binding:"required,email"`
 	ProfilePicture string `json:"profile_picture" form:"profile_picture"`
+}
+
+type AdminChangeUserRoleDTO struct {
+	ID        uint64 			`json:"id" form:"id"`
+	Role      entity.UserRole  	`gorm:"type:varchar(255);default:'USER'" json:"role"`
 }

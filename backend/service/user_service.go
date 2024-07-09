@@ -107,3 +107,21 @@ func hashPassword(password string) (string, error) {
 	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
 	return string(bytes), err
 }
+
+// Admin function
+func AdminChangeUserRole(userID uint64, role dto.AdminChangeUserRoleDTO) (dto.UserResponseDTO, error) {
+	var user entity.User
+	var userResponse dto.UserResponseDTO
+
+	user = repository.GetTheUserUsingID(userID)
+	user.Role = role.Role
+	user = repository.UpdateUser(user)
+
+	err := smapping.FillStruct(&userResponse, smapping.MapFields(&user))
+	if err != nil {
+		log.Fatal("failed to map to response ", err)
+		return userResponse, err
+	}
+
+	return userResponse, nil
+}

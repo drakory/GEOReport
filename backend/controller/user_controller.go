@@ -135,3 +135,29 @@ func DeleteAccount(c *gin.Context) {
 	})
 
 }
+
+func AdminChangeUserRole(c *gin.Context) {
+	userID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+
+	var roleDTO dto.AdminChangeUserRoleDTO
+	c.ShouldBind(&roleDTO)
+
+	if roleDTO.Role != "AUTHORITY" && roleDTO.Role != "ADMIN" && roleDTO.Role != "USER" {
+		c.JSON(400, gin.H{
+			"message": "Role is invalid",
+		})
+		return
+	}
+
+	newRole, err := service.AdminChangeUserRole(userID, roleDTO)
+	if err != nil {
+		c.JSON(404, gin.H{
+			"message": "User doesn't exist",
+			"error":   err.Error(),
+		})
+	}
+	c.JSON(200, gin.H{
+		"message": "Role changed",
+		"newRole": newRole,
+	})
+}

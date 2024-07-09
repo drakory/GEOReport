@@ -8,7 +8,7 @@ type ReportCreatedDTO struct {
 	Longitude   float64 `gorm:"type:decimal(11,8)" json:"longitude"`
 	Description string  `gorm:"type:text" json:"description"`
 	Photos      string  `gorm:"type:varchar(1024); default:'https://dl.acm.org/specs/products/acm/releasedAssets/images/cover-default--book.svg'" json:"photos"`
-	Status      string  `gorm:"type:enum('pending', 'resolved');default:'pending'" json:"status"`
+	Status      string  `gorm:"type:enum('Pending', 'Resolved');default:'Pending'" json:"status"`
 }
 
 type ReportResponseDTO struct {
@@ -30,5 +30,5 @@ type ReportUpdateDTO struct {
 
 type ReportAuthorityUpdateDTO struct {
 	AuthorityComment string `gorm:"type:text" json:"authoritycomment"`
-	Status           string `gorm:"type:enum('pending', 'resolved');default:'pending'" json:"status"`
+	Status           string `gorm:"type:enum('Pending', 'Resolved');" json:"status"`
 }

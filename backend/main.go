@@ -37,7 +37,7 @@ func main() {
 		homepage := v1.Group("/homepage")
 		{
 			homepage.GET("/", controller.Homepage) // SEM AUTH
-			
+
 			//penso que tenha de ser aqui esta route pls confirm
 			homepage.GET("/authority", middleware.Authorized("AUTHORITY"), controller.AuthorityHomepage) // AUTHORITY
 		}
@@ -48,8 +48,8 @@ func main() {
 		}
 
 		report := v1.Group("/report")
-		{	
-			report.GET("/allreportsresolved", controller.GetAllReportsResolved) 
+		{
+			report.GET("/allreportsresolved", controller.GetAllReportsResolved)
 			report.GET("/", middleware.Authorized(), controller.GetMyReports)              // DTO et AUTH OK                                      // SEM AUTH
 			report.GET("/:id", controller.GetReport)                                       // Ainda nao toquei   // SEM AUTH com DTO OUT
 			report.POST("/reportissue", middleware.Authorized(), controller.InsertReport)  // DTO IN -> AUTH -> DTO OUT
@@ -67,7 +67,8 @@ func main() {
 
 		admin := v1.Group("/admin")
 		{
-			admin.GET("/reports", middleware.Authorized("ADMIN", "AUTHORITY"), controller.GetAllReports) // AUTH -> DTO RESPONSE (ID, NAME, EMAIL)
+			admin.GET("/reports", middleware.Authorized("ADMIN", "AUTHORITY"), controller.GetAllReports)          // AUTH -> DTO RESPONSE (ID, NAME, EMAIL)
+			admin.PUT("/updaterole/:id", middleware.Authorized("ADMIN", "AUTHORITY"), controller.AdminChangeUserRole) // AUTH -> DTO IN -> DTO OUT
 		}
 
 		authority := v1.Group("/authority")

@@ -131,7 +131,10 @@ func DeleteReport(reportID uint64) error {
 	return errors.New("report does not exist")
 }
 
+// Check if the user is the owner of the report
 func IsAllowedToEdit(userID uint64, reportID uint64) bool {
-	r := repository.GetTheReportUsingID(reportID)
-	return userID == r.UserID
+	// Check if the user is the owner of the report
+	report := repository.GetTheReportUsingID(reportID)
+	return userID == report.UserID
+	
 }
