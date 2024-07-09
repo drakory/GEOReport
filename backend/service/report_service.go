@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"georeportapi/dto"
 	"georeportapi/entity"
 	"georeportapi/repository"
@@ -104,16 +103,10 @@ func UpdateReportByAuthority(reportDTO dto.ReportAuthorityUpdateDTO, reportID ui
 		log.Fatal("failed to map ", err)
 		return reportResponse, err
 	}
-
-	fmt.Println("Response: ", report)
-
+	
 	report.UserID = userID
 	report.ID = reportID
 	report, _ = repository.UpdateReportByAuthority(report)
-
-	fmt.Println("reportDTO: ", reportDTO)
-	fmt.Println("\n", reportResponse)
-	fmt.Println("Response: ", report)
 
 	err = smapping.FillStruct(&reportResponse, smapping.MapFields(&report))
 	if err != nil {

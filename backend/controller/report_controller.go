@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"georeportapi/dto"
 	"georeportapi/service"
 	"strconv"
@@ -53,18 +52,12 @@ func InsertReport(c *gin.Context) {
 	
 	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	reportResponseDTO := service.InsertReport(reportDTO, userID)
-	fmt.Println(reportResponseDTO)
-	// Falta avisar o user que o report foi inserido com sucesso
-	/*c.HTML(201, "register_result.html", gin.H{
-        "Message": "Report registered successfully",
-        "User":    reportResponseDTO,
-    })*/
-	/*c.JSON(200, gin.H{
-		"message": "insert report",
+	
+	c.JSON(200, gin.H{
+		"message": "report inserted successfully",
 		"report": reportResponseDTO,
-	})*/
+	})
 
-	c.Redirect(303, "/georeport/report/")
 }
 
 func UpdateReport(c *gin.Context) {
@@ -87,7 +80,6 @@ func UpdateReport(c *gin.Context) {
 		})
 		return
 	}
-	fmt.Println(reportDTO)
 	reportResponseDTO, err := service.UpdateReport(reportDTO, reportID, userID)
 	if err != nil {
 		c.JSON(404, gin.H{
@@ -122,7 +114,14 @@ func UpdateReportByAuthority(c *gin.Context) {
 		})
 		return
 	}
-	fmt.Println(reportDTO)
+	
+	if reportDTO.Status != "Pending" && reportDTO.Status != "Resolved" && reportDTO.Status != "Being Resolved" {
+        c.JSON(404, gin.H{
+			"message": "Status is not valid. Please insert a valid status: Pending, Resolved or Being Resolved",
+		})
+		return
+    } 
+	
 	reportResponseDTO, err := service.UpdateReportByAuthority(reportDTO, reportID, userID)
 	if err != nil {
 		c.JSON(404, gin.H{
