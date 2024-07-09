@@ -23,12 +23,14 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Build Docker image
-        run: docker build -f ./backend/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/georeport_golang ./backend
-        run: docker build -f ./frontend/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/georeport_react ./frontend
+        run: |
+          docker build -f ./backend/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/georeport_golang ./backend
+          docker build -f ./frontend/Dockerfile -t ${{ secrets.DOCKERHUB_USERNAME }}/georeport_react ./frontend
 
       - name: Push Docker image
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/georeport_golang
-        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/georeport_react
+        run: |
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/georeport_golang
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/georeport_react
 
   deploy_app:
     needs: build_docker_images
