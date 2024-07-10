@@ -22,18 +22,18 @@ services:
     restart: on-failure
     depends_on:
       - database
-  #react:
-  #  container_name: react_container
-  #  build:
-  #    context: ./frontend
-  #  restart: always
-  #  env_file:
-  #    - .env
-  #  ports:
-  #    - "8080:8080"
-  #  depends_on:
-  #    - app
-  #    - database
-  #
-  #volumes:
-  #postgres:
+  react:
+    container_name: react_container
+    build:
+      context: ./frontend
+    restart: always
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    depends_on:
+      - app
+      - database
+
+volumes:
+  postgres:

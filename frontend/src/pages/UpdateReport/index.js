@@ -12,10 +12,10 @@ import {
   ContainerInputs,
   InputEditUser,
   ContainerButtonAdd,
-  ButtonAdd,
+  ButtonAddUser,
 } from "./styles";
 
-const Register = () => {
+const UpdateReport = () => {
   const navigate = useNavigate();
 
   const name = useRef();
@@ -23,7 +23,7 @@ const Register = () => {
   const password = useRef();
   const profilePicture = useRef();
 
-  async function addUser(e) {
+  async function updateUser(e) {
     e.preventDefault();
     console.log("add user");
 
@@ -31,19 +31,25 @@ const Register = () => {
       name: name.current.value,
       email: email.current.value,
       password: password.current.value,
-      profilePicture: profilePicture.current.value,
+      profile_picture: profilePicture.current.value,
     };
-    const url = `${process.env.REACT_APP_API_BASE_URL}/georeport/user/registration`;
+    const url = `${process.env.REACT_APP_API_BASE_URL}/authority/update/5`;
     const token = sessionStorage.getItem("token");
 
     try {
-      await Axios.post(url, JSON.stringify(newUser), {
-        headers: { "Content-Type": "application/json", Authorization: token },
+      console.log(JSON.stringify(newUser));
+      const response = await Axios.put(url, newUser, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
       });
-      toast.success("User added successfully!");
-
-      //navigate("/");
+      toast.success("Report added successfully!");
+      console.log("SUCESS!!")
+      //navigate("/profile");
     } catch (error) {
+      console.log("ERROR UPDATING");
       console.log(error);
       const errorMessage = error.response?.data?.message || "Registration failed. Please try again.";
       toast.error(errorMessage, {
@@ -57,7 +63,7 @@ const Register = () => {
       <Header />
       <ContainerUser>
         <ToastContainer />
-        <ContainerInfosUser onSubmit={addUser}>
+        <ContainerInfosUser onSubmit={updateUser}>
           <ContainerInputs>
             <InputEditUser
               name="name"
@@ -75,24 +81,9 @@ const Register = () => {
               required
               ref={email}
             />
-            <InputEditUser
-              name="profilePicture"
-              placeholder="Insert profile picture URL"
-              type="text"
-              id="add_profile_picture"
-              ref={profilePicture}
-            />
-            <InputEditUser
-              name="titleBook"
-              placeholder="Insert password"
-              type="password" 
-              id="add_password"
-              required
-              ref={password}
-            />
           </ContainerInputs>
           <ContainerButtonAdd>
-            <ButtonAdd type="submit">Add</ButtonAdd>
+            <ButtonAddUser type="submit">Update User</ButtonAddUser>
           </ContainerButtonAdd>
         </ContainerInfosUser>
       </ContainerUser>
@@ -101,4 +92,4 @@ const Register = () => {
   );
 };
 
-export default Register;
+export default UpdateReport;

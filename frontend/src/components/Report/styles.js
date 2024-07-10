@@ -4,44 +4,40 @@ export const ListContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
+  margin: 20px 0;
 `;
 
 export const ReportCard = styled.div`
-  background-color: #fff;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin: 10px;
   padding: 20px;
-  width: 100%;
-  max-width: 400px;
+  margin: 10px;
+  width: 300px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 `;
 
 export const ReportType = styled.h3`
-  margin: 0 0 10px 0;
-  color: #333;
-`;
-
-export const ReportStatus = styled.h3`
-  margin: 0 0 10px 0;
-  color: #333;
+  margin-bottom: 10px;
 `;
 
 export const ReportImage = styled.img`
   width: 100%;
-  height: auto;
-  border-radius: 4px;
-  margin-bottom: 10px;
+  height: 400px; /* Fixed height */
+  object-fit: cover; /* Ensures the image covers the area while maintaining aspect ratio */
+  border-radius: 8px;
 `;
 
 export const ReportDescription = styled.p`
-  margin: 0 0 10px 0;
+  margin: 10px 0;
+`;
+
+export const ReportCoordinates = styled.div`
+  font-size: 0.9em;
   color: #666;
+  margin: 10px 0;
 `;
 
-export const ReportCoordinates = styled.p`
-  margin: 0;
-  color: #999;
+export const ReportStatus = styled.div`
+  font-weight: bold;
+  margin-top: 10px;
 `;
-
-

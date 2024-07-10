@@ -15,7 +15,7 @@ func GetAllReports() []entity.Report {
 
 func GetAllReportsResolved() []entity.Report {
 	var reports []entity.Report
-	config.Db.Preload("User").Where("status = ?", "resolved").Find(&reports)
+	config.Db.Preload("User").Where("status = ?", "Resolved").Find(&reports)
 
 	return reports
 }

@@ -12,6 +12,7 @@ type ReportCreatedDTO struct {
 }
 
 type ReportResponseDTO struct {
+	ID               uint64    `gorm:"primary_key:auto_increment" json:"id"`
 	Type             string    `gorm:"type:varchar(150)" json:"type" binding:"required"`
 	Latitude         float64   `gorm:"type:decimal(10,8)" json:"latitude"`
 	Longitude        float64   `gorm:"type:decimal(11,8)" json:"longitude"`

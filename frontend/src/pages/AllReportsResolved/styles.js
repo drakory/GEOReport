@@ -74,18 +74,3 @@ export const FilterInput = styled.input`
     border-color: #007bff;
   }
 `;
-
-export const ButtonUpdate = styled.button`
-  margin-top: 8px;
-  border: none;
-  color: #fdc544;
-  padding: 8px 54px;
-  background: #fff5d4;
-  border-radius: 4px;
-  font-size: 18px;
-
-  &:hover {
-    -webkit-transform: scale(1.4);
-    transform: scale(1.1);
-  }
-`;

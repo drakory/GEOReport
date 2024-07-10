@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import Report from "../../components/Report";
@@ -6,8 +6,9 @@ import Axios from "axios";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { useNavigate } from "react-router-dom";
 import { 
-  ContainerReports,
+  ContainerUser,
   MainContainer,
   MapWrapper,
   FormWrapper,
@@ -15,7 +16,8 @@ import {
   FiltersWrapper,
   FilterSelect,
   FilterLabel,
-  FilterInput
+  FilterInput,
+  ButtonUpdate
 } from "./styles";
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -30,7 +32,7 @@ const center = {
   lng: -8.6291,
 };
 
-const AllReportsResolved = () => {
+const UpdateReportPage = () => {
   const [reports, setReports] = useState([]);
   const [filteredReports, setFilteredReports] = useState([]);
   const [types, setTypes] = useState([]);
@@ -39,13 +41,10 @@ const AllReportsResolved = () => {
   const [endDate, setEndDate] = useState("");
   const token = sessionStorage.getItem("token");
   const [selectedPosition, setSelectedPosition] = useState(null);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    getReports();
-  }, []);
-
-  async function getReports() {
-    const url = `${process.env.REACT_APP_API_BASE_URL}/georeport/report/allreportsresolved`;
+  const getReports = useCallback(async () => {
+    const url = `${process.env.REACT_APP_API_BASE_URL}/georeport/admin/reports`;
     try {
       const response = await Axios.get(url, {
         headers: {
@@ -60,7 +59,11 @@ const AllReportsResolved = () => {
       console.log(error);
       setReports([]); // Set to empty array on error
     }
-  }
+  }, [token]);
+
+  useEffect(() => {
+    getReports();
+  }, [getReports]);
 
   const handleReportClick = (lat, lng) => {
     setSelectedPosition([lat, lng]);
@@ -96,6 +99,10 @@ const AllReportsResolved = () => {
       filtered = filtered.filter(report => new Date(report.updated_at) <= new Date(end));
     }
     setFilteredReports(filtered);
+  };
+
+  const handleRegisterClick = (reportId) => {
+    navigate(`/update-report/${reportId}`);
   };
 
   return (
@@ -134,8 +141,8 @@ const AllReportsResolved = () => {
             <FilterLabel>End Date:</FilterLabel>
             <FilterInput type="date" value={endDate} onChange={handleEndDateChange} />
           </FiltersWrapper>
-          <Title>All Reports Resolved</Title>
-          <ContainerReports>
+          <Title>All Reports</Title>
+          <ContainerUser>
             {filteredReports.map((report, index) => (
               <div onClick={() => handleReportClick(report.latitude, report.longitude)} key={index}>
                 <Report
@@ -145,10 +152,14 @@ const AllReportsResolved = () => {
                   latitude={report.latitude}
                   longitude={report.longitude}
                   status={report.status}
+                  updated_at={report.updated_at}
                 />
+                <ButtonUpdate type="button"onClick={() => handleRegisterClick(report.id)}>
+                Update
+              </ButtonUpdate>
               </div>
-            ))}
-          </ContainerReports>
+            ))}         
+          </ContainerUser>
         </FormWrapper>
       </MainContainer>
       <Footer />
@@ -164,4 +175,4 @@ const MoveMap = ({ position }) => {
   return null;
 };
 
-export default AllReportsResolved;
+export default UpdateReportPage;

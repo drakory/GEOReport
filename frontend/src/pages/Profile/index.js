@@ -4,12 +4,13 @@ import Header from "../../components/Header";
 import User from "../../components/User";
 import Axios from "axios";
 import { jwtDecode } from "jwt-decode";
-import { ContainerBooks } from "./styles";
-//import { Navigate } from "react-router-dom";
+import { ContainerUser, Title, ButtonUpdate } from "./styles";
+import { useNavigate } from "react-router-dom";
+
 
 const Profile = () => {
   const [users, setUsers] = useState([]);
-  //const [login, setLogin] = useState(false);
+  const navigate = useNavigate();
   useEffect(() => {
     getUser();
   }, []);
@@ -27,7 +28,7 @@ const Profile = () => {
     const userId = decodedToken.user_id;
     console.log(`Userid = ${userId}`);
 
-    const url = `http://localhost:3000/georeport/user/`;
+    const url = `${process.env.REACT_APP_API_BASE_URL}/georeport/user/`;
 
     try {
       const response = await Axios.get(url, {
@@ -45,33 +46,28 @@ const Profile = () => {
     }
   }
 
+  function updateReports() {
+    console.log("navigate to updateReports");
+    navigate("/updatereportpage");
+  }
+
   return (
     <>
       <Header />
-{/*       {login ? (
-        <>
-          <Navigate to="/gallery" replace={true} />
-        </>
-      ) : ( */}
-        <ContainerBooks>
-          Profile
+      <Title>Profile</Title>
+        <ContainerUser>
             <User
               userName={users.name}
               userEmail={users.email}
               image={users.profile_picture}
             />
-          {/* <Book
-          image={books[1].book_cover}
-          title={books[1].title}
-          showInfo={books[1].description}
-        />
-        <Book
-          image={books[2].book_cover}
-          title={books[2].title}
-          showInfo={books[2].description}
-        /> */}
-        </ContainerBooks>
-{/*       )} */}
+            
+        </ContainerUser>
+        {users.role === "AUTHORITY" && (
+              <ButtonUpdate type="button" onClick={updateReports}>
+                Update Reports
+              </ButtonUpdate>
+            )}
       <Footer />
     </>
   );
