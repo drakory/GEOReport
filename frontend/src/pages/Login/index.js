@@ -42,7 +42,7 @@ const Login = () => {
   async function loginUser(credentials) {
     console.log("login user");
     console.log(credentials);
-    const url = "http://localhost:3000/georeport/auth/login";
+    const url = `${process.env.REACT_APP_API_BASE_URL}/georeport/auth/login`;
     try {
       const response = await Axios.post(url, JSON.stringify(credentials), {
         headers: { "Content-Type": "application/json" },

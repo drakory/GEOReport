@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
-export const ContainerUser = styled.div`
+export const ContainerReport = styled.div`
   display: flex;
   justify-content: center;
 `;
 
-export const ContainerInfosUser = styled.form`
+export const ContainerInfoReport = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -27,14 +27,14 @@ export const InputChangeImage = styled.input`
   padding: 2px 8px;
 `;
 
-export const InputEditUser = styled.input`
+export const InputEditRepor = styled.input`
   color: #000;
   font-size: 16px;
   margin: 4px 0;
   padding: 2px 8px;
 `;
 
-export const InputEditUserDescription = styled.input`
+export const InputEditReportDescription = styled.input`
   color: #000;
   font-size: 16px;
   margin: 4px 0;
@@ -47,7 +47,7 @@ export const ContainerButtonAdd = styled.div`
   justify-content: center;
 `;
 
-export const ButtonAdd = styled.button`
+export const ButtonAddBook = styled.button`
   background-color: #fdc544;
   color: #fff;
   border-radius: 16px;
@@ -58,6 +58,21 @@ export const ButtonAdd = styled.button`
 
   &:hover {
     opacity: 100%;
+    -webkit-transform: scale(1.4);
+    transform: scale(1.1);
+  }
+`;
+
+export const ButtonDelete = styled.button`
+  margin-top: 8px;
+  border: none;
+  color: #fdc544;
+  padding: 8px 54px;
+  background: #fff5d4;
+  border-radius: 4px;
+  font-size: 18px;
+
+  &:hover {
     -webkit-transform: scale(1.4);
     transform: scale(1.1);
   }

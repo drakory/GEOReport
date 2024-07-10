@@ -47,7 +47,7 @@ export const ContainerButtonAdd = styled.div`
   justify-content: center;
 `;
 
-export const ButtonAdd = styled.button`
+export const ButtonAddUser = styled.button`
   background-color: #fdc544;
   color: #fff;
   border-radius: 16px;

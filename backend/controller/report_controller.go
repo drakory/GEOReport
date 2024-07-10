@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"georeportapi/dto"
 	"georeportapi/service"
 	"strconv"
@@ -23,21 +22,20 @@ func GetAllReportsResolved(c *gin.Context) {
 	})
 }
 
-
 func GetReport(c *gin.Context) {
 	reportID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
-	
+
 	reportResponseDTO, err := service.GetReport(reportID)
 	if err != nil {
 		c.JSON(404, gin.H{
 			"message": "error",
-			"error": err.Error(),
+			"error":   err.Error(),
 		})
 		return
 	}
 	c.JSON(200, gin.H{
 		"message": "select report",
-		"report": reportResponseDTO,
+		"report":  reportResponseDTO,
 	})
 }
 
@@ -50,21 +48,15 @@ func InsertReport(c *gin.Context) {
 		})
 		return
 	}
-	
+
 	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	reportResponseDTO := service.InsertReport(reportDTO, userID)
-	fmt.Println(reportResponseDTO)
-	// Falta avisar o user que o report foi inserido com sucesso
-	/*c.HTML(201, "register_result.html", gin.H{
-        "Message": "Report registered successfully",
-        "User":    reportResponseDTO,
-    })*/
-	/*c.JSON(200, gin.H{
-		"message": "insert report",
+	
+	c.JSON(200, gin.H{
+		"message": "report inserted successfully",
 		"report": reportResponseDTO,
-	})*/
+	})
 
-	c.Redirect(303, "/georeport/report/")
 }
 
 func UpdateReport(c *gin.Context) {
@@ -87,7 +79,6 @@ func UpdateReport(c *gin.Context) {
 		})
 		return
 	}
-	fmt.Println(reportDTO)
 	reportResponseDTO, err := service.UpdateReport(reportDTO, reportID, userID)
 	if err != nil {
 		c.JSON(404, gin.H{
@@ -98,7 +89,7 @@ func UpdateReport(c *gin.Context) {
 	}
 	c.JSON(200, gin.H{
 		"message": "update report",
-		"report":    reportResponseDTO,
+		"report":  reportResponseDTO,
 	})
 }
 
@@ -106,12 +97,7 @@ func UpdateReportByAuthority(c *gin.Context) {
 	// Verificaçao de permissao
 	reportID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
-	if !service.IsAllowedToEdit(userID, reportID) {
-		c.JSON(401, gin.H{
-			"message": "you do not have the permission - you are not the owner of this report",
-		})
-		return
-	}
+	
 	// Atualizaçao do report
 	var reportDTO dto.ReportAuthorityUpdateDTO
 	err := c.ShouldBind(&reportDTO)
@@ -122,7 +108,14 @@ func UpdateReportByAuthority(c *gin.Context) {
 		})
 		return
 	}
-	fmt.Println(reportDTO)
+	
+	if reportDTO.Status != "Pending" && reportDTO.Status != "Resolved" && reportDTO.Status != "Being Resolved" {
+        c.JSON(404, gin.H{
+			"message": "Status is not valid. Please insert a valid status: Pending, Resolved or Being Resolved",
+		})
+		return
+    } 
+	
 	reportResponseDTO, err := service.UpdateReportByAuthority(reportDTO, reportID, userID)
 	if err != nil {
 		c.JSON(404, gin.H{
@@ -133,7 +126,7 @@ func UpdateReportByAuthority(c *gin.Context) {
 	}
 	c.JSON(200, gin.H{
 		"message": "update report",
-		"report":    reportResponseDTO,
+		"report":  reportResponseDTO,
 	})
 }
 
@@ -165,6 +158,6 @@ func GetMyReports(c *gin.Context) {
 	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
 	c.JSON(200, gin.H{
 		"message": "select report",
-		"reports":   service.GetMyReports(userID),
+		"reports": service.GetMyReports(userID),
 	})
 }

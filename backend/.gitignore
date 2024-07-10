@@ -2,4 +2,6 @@
 /tmp
 yarn.lock
 main.exe
-package.json
+package.json 
+postgres
+/node_modules

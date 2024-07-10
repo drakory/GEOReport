@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const ContainerBooks = styled.div`
+export const ContainerUsers = styled.div`
   display: flex;
   flex-wrap: wrap;
   justify-content: center;

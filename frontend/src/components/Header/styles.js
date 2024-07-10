@@ -43,6 +43,10 @@ export const ContainerMenu = styled.div`
   align-items: center;
   width: fit-content;
   margin: 20px;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const LinkHome = styled(Link)`
@@ -105,5 +109,37 @@ export const Button = styled.button`
     opacity: 100%;
     -webkit-transform: scale(1.4);
     transform: scale(1.2);
+  }
+`;
+
+export const HamburgerIcon = styled.img`
+  display: none;
+  height: 30px;
+  cursor: pointer;
+
+  @media (max-width: 768px) {
+    display: block;
+  }
+`;
+
+export const CloseIcon = styled.img`
+  height: 30px;
+  cursor: pointer;
+  margin: 10px;
+`;
+
+export const MobileMenu = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #fff;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+
+  & > button, & > a {
+    margin: 10px 0;
   }
 `;

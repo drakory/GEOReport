@@ -145,6 +145,7 @@ const AllReportsResolved = () => {
                   latitude={report.latitude}
                   longitude={report.longitude}
                   status={report.status}
+                  updated_at={report.updated_at}
                 />
               </div>
             ))}

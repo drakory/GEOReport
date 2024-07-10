@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"georeportapi/dto"
 	"georeportapi/entity"
 	"georeportapi/repository"
@@ -15,8 +14,19 @@ func GetAllReports() []entity.Report {
 	return repository.GetAllReports()
 }
 
-func GetAllReportsResolved() []entity.Report {
-	return repository.GetAllReportsResolved()
+func GetAllReportsResolved() []dto.ReportResponseDTO {
+	reports := repository.GetAllReportsResolved()
+	var reportsResponseDTO []dto.ReportResponseDTO
+	for _, report := range reports {
+		var reportResponseDTO dto.ReportResponseDTO
+		err := smapping.FillStruct(&reportResponseDTO, smapping.MapFields(&report))
+		if err != nil {
+			log.Fatal("failed to map to response ", err)
+			return reportsResponseDTO
+		}
+		reportsResponseDTO = append(reportsResponseDTO, reportResponseDTO)
+	}
+	return reportsResponseDTO
 }
 
 func GetMyReports(userID uint64) []dto.ReportResponseDTO {
@@ -104,16 +114,10 @@ func UpdateReportByAuthority(reportDTO dto.ReportAuthorityUpdateDTO, reportID ui
 		log.Fatal("failed to map ", err)
 		return reportResponse, err
 	}
-
-	fmt.Println("Response: ", report)
-
+	
 	report.UserID = userID
 	report.ID = reportID
 	report, _ = repository.UpdateReportByAuthority(report)
-
-	fmt.Println("reportDTO: ", reportDTO)
-	fmt.Println("\n", reportResponse)
-	fmt.Println("Response: ", report)
 
 	err = smapping.FillStruct(&reportResponse, smapping.MapFields(&report))
 	if err != nil {
@@ -131,7 +135,10 @@ func DeleteReport(reportID uint64) error {
 	return errors.New("report does not exist")
 }
 
+// Check if the user is the owner of the report
 func IsAllowedToEdit(userID uint64, reportID uint64) bool {
-	r := repository.GetTheReportUsingID(reportID)
-	return userID == r.UserID
+	// Check if the user is the owner of the report
+	report := repository.GetTheReportUsingID(reportID)
+	return userID == report.UserID
+	
 }

@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
-export const ContainerBook = styled.div`
+export const ContainerReport = styled.div`
   display: flex;
   justify-content: center;
 `;
 
-export const ContainerInfosBook = styled.form`
+export const ContainerInfosReport = styled.form`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -27,14 +27,14 @@ export const InputChangeImage = styled.input`
   padding: 2px 8px;
 `;
 
-export const InputEditBook = styled.input`
+export const InputEditReport = styled.input`
   color: #000;
   font-size: 16px;
   margin: 4px 0;
   padding: 2px 8px;
 `;
 
-export const InputEditBookDescription = styled.input`
+export const InputEditReportDescription = styled.input`
   color: #000;
   font-size: 16px;
   margin: 4px 0;
@@ -47,7 +47,7 @@ export const ContainerButtonAdd = styled.div`
   justify-content: center;
 `;
 
-export const ButtonAddBook = styled.button`
+export const ButtonAddReport = styled.button`
   background-color: #fdc544;
   color: #fff;
   border-radius: 16px;
@@ -87,3 +87,9 @@ export const FormWrapper = styled.div`
     height: 100vh;
   }
 `;
+
+export const Title = styled.h1`
+  text-align: center;
+  margin-bottom: 20px;
+`;
+

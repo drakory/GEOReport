@@ -34,7 +34,6 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	//userResponse :=
 	service.Register(user)
 
 	var loginDTO dto.LoginDTO
@@ -48,13 +47,10 @@ func Register(c *gin.Context) {
 	// Add token in cookies
 	c.SetCookie("token", token, 3600, "/", "localhost", false, true)
 
-	/*c.JSON(200, gin.H{
-		"message": "Insert user",
-		"user" : userResponse,
-		"token": token,
-	})*/
-
-	//c.Redirect(303, "/georeport/homepage/")
+	c.JSON(200, gin.H{
+		"message": "User registered successfully",
+		"token":   token,
+	})
 }
 
 func Profile(c *gin.Context) {
@@ -80,19 +76,21 @@ func UpdateProfile(c *gin.Context) {
 	c.ShouldBind(&user)
 
 	// Check if the email is valid and non used
-	if !service.IsValidEmail(user.Email) {
-		c.JSON(401, gin.H{
-			"message": "the email you fill is invalid",
-		})
-		return
+	if user.Email != "" {
+		if !service.IsValidEmail(user.Email) {
+			c.JSON(401, gin.H{
+				"message": "the email you fill is invalid",
+			})
+			return
+		}
+	
+		if service.IsUsedEmail(user.Email) {
+			c.JSON(401, gin.H{
+				"message": "the email you fill is already used",
+			})
+			return
+		}
 	}
-	if service.IsUsedEmail(user.Email) {
-		c.JSON(401, gin.H{
-			"message": "the email you fill is already used",
-		})
-		return
-	}
-
 	userResponse, err := service.UpdateProfile(user, userID)
 	if err != nil {
 		c.JSON(404, gin.H{
@@ -106,21 +104,7 @@ func UpdateProfile(c *gin.Context) {
 }
 
 func DeleteAccount(c *gin.Context) {
-	IDPage, _ := strconv.ParseUint(c.Param("id"), 10, 64)
 	userID, _ := strconv.ParseUint(c.GetString("user_id"), 10, 64)
-	if !service.IsAllowed(userID, IDPage) {
-		c.JSON(401, gin.H{
-			"message": "you do not have the permission - you are not the owner of this user",
-		})
-		return
-	}
-	/*if error != nil {
-		c.JSON(400,gin.H{
-			"message":"error",
-			"error": error.Error(),
-		})
-		return
-	}*/
 
 	err := service.DeleteAccount(userID)
 	if err != nil {
@@ -134,4 +118,47 @@ func DeleteAccount(c *gin.Context) {
 		"message": "Delete user using id" + c.Param("id"),
 	})
 
+}
+
+func DeleteAccountByAdmin(c *gin.Context) {
+	userID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+
+	err := service.DeleteAccount(userID)
+	if err != nil {
+		c.JSON(404, gin.H{
+			"message": "User doesn't exist",
+			"error":   err.Error(),
+		})
+	}
+
+	c.JSON(200, gin.H{
+		"message": "Delete user using id" + c.Param("id"),
+	})
+
+}
+
+func AdminChangeUserRole(c *gin.Context) {
+	userID, _ := strconv.ParseUint(c.Param("id"), 10, 64)
+
+	var roleDTO dto.AdminChangeUserRoleDTO
+	c.ShouldBind(&roleDTO)
+
+	if roleDTO.Role != "AUTHORITY" && roleDTO.Role != "ADMIN" && roleDTO.Role != "USER" {
+		c.JSON(400, gin.H{
+			"message": "Role is invalid",
+		})
+		return
+	}
+
+	newRole, err := service.AdminChangeUserRole(userID, roleDTO)
+	if err != nil {
+		c.JSON(404, gin.H{
+			"message": "User doesn't exist",
+			"error":   err.Error(),
+		})
+	}
+	c.JSON(200, gin.H{
+		"message": "Role changed",
+		"newRole": newRole,
+	})
 }

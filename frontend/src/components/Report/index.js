@@ -9,7 +9,13 @@ import {
 } from "./styles";
 //import Axios from "axios";
 
-const Report = ({ type, image, description, id, latitude, longitude, status }) => {
+const Report = ({ type, image, description, id, latitude, longitude, status, authoritycomment, updated_at }) => {
+
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-GB', options).replace(',', ' -');
+  };
   //const token = sessionStorage.getItem("token");
   //const isLoggedIn = token !== null;
 
@@ -30,21 +36,25 @@ const Report = ({ type, image, description, id, latitude, longitude, status }) =
       console.log(err);
     }
   } */
-  return (
-    <>
-      <ListContainer>
-        <ReportCard key={id}>
-          <ReportType>{type}</ReportType>
-          <ReportImage src={image} alt="report" />
-          <ReportDescription>{description}</ReportDescription>
-          <ReportCoordinates>
-            Lat: {latitude}, Lng: {longitude}
-          </ReportCoordinates>
-          <ReportStatus>{status}</ReportStatus>
-        </ReportCard>
-    </ListContainer>
-    </>
-  );
+    return (
+      <>
+        <ListContainer>
+          <ReportCard key={id}>
+            <ReportType>{type}</ReportType>
+            <ReportImage src={image} alt="report" />
+            <ReportDescription>{description}</ReportDescription>
+            <ReportCoordinates>
+              Lat: {latitude}, Lng: {longitude}
+            </ReportCoordinates>
+            <ReportStatus>{status}</ReportStatus>
+            {authoritycomment && authoritycomment.trim() !== "" && (
+              <ReportDescription>Authority Comment: {authoritycomment}</ReportDescription>
+            )}
+            <ReportDescription>Updated At: {formatDate(updated_at)}</ReportDescription>
+          </ReportCard>
+        </ListContainer>
+      </>
+    );
 };
 
 export default Report;

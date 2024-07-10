@@ -3,7 +3,7 @@ import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import User from "../../components/User";
 import Axios from "axios";
-import { ContainerBooks } from "./styles";
+import { ContainerUsers } from "./styles";
 
 const AllUsers = () => {
   const [users, setUsers] = useState([]);
@@ -13,7 +13,7 @@ const AllUsers = () => {
   }, []);
 
   async function getUsers() {
-    const url = "http://localhost:3000/api/v1/user/";
+    const url = `${process.env.REACT_APP_API_BASE_URL}/api/v1/user/`;
     try {
       const response = await Axios.get(url, {
         headers: { "Content-Type": "application/json" },
@@ -29,7 +29,7 @@ const AllUsers = () => {
   return (
     <>
       <Header />
-      <ContainerBooks>
+      <ContainerUsers>
         All Users
         {users.map((user, index) => (
           <User
@@ -49,7 +49,7 @@ const AllUsers = () => {
           title={books[2].title}
           showInfo={books[2].description}
         /> */}
-      </ContainerBooks>
+      </ContainerUsers>
       <Footer />
     </>
   );

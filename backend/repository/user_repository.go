@@ -23,12 +23,25 @@ func GetUser(userID uint64) (entity.User, error) {
 }
 
 func UpdateUser(user entity.User) entity.User {
-	if _, err := GetUser(user.ID); err == nil {
-		config.Db.Save(&user)
-		config.Db.Find(&user)
+	existingUser, err := GetUser(user.ID)
+	if err != nil {
 		return user
 	}
-	return user
+	existingUser.Name = user.Name
+	existingUser.ProfilePicture = user.ProfilePicture
+	if user.Email != "" && user.Email != existingUser.Email{
+		existingUser.Email = user.Email
+	}
+	if user.Password != "" {
+		existingUser.Password = user.Password
+	}
+	
+	// Save the updated report back to the database
+	config.Db.Save(&existingUser)
+	// Preload the User and find the updated report
+	config.Db.Find(&existingUser)
+
+	return existingUser
 }
 
 func DeleteUser(userID uint64) error {

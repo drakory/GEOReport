@@ -2,25 +2,24 @@ import React, { useRef, useState, useMemo, useCallback } from "react";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import Axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import styled from "styled-components";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 
 import {
-  ContainerBook,
-  ContainerInfosBook,
+  ContainerReport,
+  ContainerInfosReport,
   ContainerInputs,
-  InputEditBook,
-  InputEditBookDescription,
+  InputEditReport,
+  InputEditReportDescription,
   ContainerButtonAdd,
-  ButtonAddBook,
+  ButtonAddReport,
   MainContainer,
   MapWrapper,
-  FormWrapper
+  FormWrapper,
+  Title
 } from "./styles";
 
 delete L.Icon.Default.prototype._getIconUrl;
@@ -81,7 +80,6 @@ function ClickableMap({ setPosition }) {
 }
 
 const ReportIssue = () => {
-  const navigate = useNavigate();
 
   const type = useRef();
   const description = useRef();
@@ -104,7 +102,7 @@ const ReportIssue = () => {
       Status: "Pending"
     };
 
-    const url = "http://localhost:3000/georeport/report/reportissue";
+    const url = `${process.env.REACT_APP_API_BASE_URL}/georeport/report/reportissue`;
     const token = sessionStorage.getItem("token");
     try {
       await Axios.post(url, JSON.stringify(reportData), {
@@ -132,10 +130,11 @@ const ReportIssue = () => {
           </MapContainer>
         </MapWrapper>
         <FormWrapper>
-          <ContainerBook>
-            <ContainerInfosBook onSubmit={addReport}>
+        <Title>Report a new issue</Title>
+          <ContainerReport>
+            <ContainerInfosReport onSubmit={addReport}>
               <ContainerInputs>
-                <InputEditBook
+                <InputEditReport
                   name="type"
                   placeholder="Insert Type"
                   type="text"
@@ -143,7 +142,7 @@ const ReportIssue = () => {
                   required
                   ref={type}
                 />
-                <InputEditBook
+                <InputEditReport
                   name="Report image"
                   placeholder="Insert Report image url"
                   type="text"
@@ -151,7 +150,7 @@ const ReportIssue = () => {
                   required
                   ref={image}
                 />
-                <InputEditBookDescription
+                <InputEditReportDescription
                   name="descriptionReport"
                   placeholder="Description"
                   type="text"
@@ -161,10 +160,10 @@ const ReportIssue = () => {
                 />
               </ContainerInputs>
               <ContainerButtonAdd>
-                <ButtonAddBook>Add</ButtonAddBook>
+                <ButtonAddReport>Add</ButtonAddReport>
               </ContainerButtonAdd>
-            </ContainerInfosBook>
-          </ContainerBook>
+            </ContainerInfosReport>
+          </ContainerReport>
         </FormWrapper>
       </MainContainer>
       <Footer />

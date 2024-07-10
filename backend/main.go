@@ -14,7 +14,7 @@ func CORSMiddleware() gin.HandlerFunc {
 		c.Header("Access-Control-Allow-Origin", "*")
 		c.Header("Access-Control-Allow-Credentials", "true")
 		c.Header("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, X-CSRF-Token, Authorization, accept, origin, Cache-Control, X-Requested-With")
-		c.Header("Access-Control-Allow-Methods", "POST,HEAD,PATCH, OPTIONS, GET, PUT, DELETE")
+		c.Header("Access-Control-Allow-Methods", "POST, HEAD, PATCH, OPTIONS, GET, PUT, DELETE")
 
 		if c.Request.Method == "OPTIONS" {
 			c.AbortWithStatus(204)
@@ -37,7 +37,7 @@ func main() {
 		homepage := v1.Group("/homepage")
 		{
 			homepage.GET("/", controller.Homepage) // SEM AUTH
-			
+
 			//penso que tenha de ser aqui esta route pls confirm
 			homepage.GET("/authority", middleware.Authorized("AUTHORITY"), controller.AuthorityHomepage) // AUTHORITY
 		}
@@ -48,8 +48,8 @@ func main() {
 		}
 
 		report := v1.Group("/report")
-		{	
-			report.GET("/allreportsresolved", controller.GetAllReportsResolved) 
+		{
+			report.GET("/allreportsresolved", controller.GetAllReportsResolved)
 			report.GET("/", middleware.Authorized(), controller.GetMyReports)              // DTO et AUTH OK                                      // SEM AUTH
 			report.GET("/:id", controller.GetReport)                                       // Ainda nao toquei   // SEM AUTH com DTO OUT
 			report.POST("/reportissue", middleware.Authorized(), controller.InsertReport)  // DTO IN -> AUTH -> DTO OUT
@@ -59,15 +59,17 @@ func main() {
 
 		user := v1.Group("/user")
 		{
-			user.GET("/", middleware.Authorized(), controller.Profile)                    // O user so acede as suas proprias informaçoes              // AUTH - OWNER -> DTO RESPONSE (ID, NAME, EMAIL, PROFILE PICTURE)
-			user.POST("/registration", controller.Register)                               // Falta autenticaçao depois do register e redirection to homepage    // SEM AUTH -> DTO IN -> DTO OUT
-			user.PUT("/update/", middleware.Authorized(), controller.UpdateProfile)       // AUTH - OWNER
-			user.DELETE("/delete/:id", middleware.Authorized(), controller.DeleteAccount) // AUTH - OWNER
+			user.GET("/", middleware.Authorized(), controller.Profile)                 // O user so acede as suas proprias informaçoes              // AUTH - OWNER -> DTO RESPONSE (ID, NAME, EMAIL, PROFILE PICTURE)
+			user.POST("/registration", controller.Register)                            // Falta autenticaçao depois do register e redirection to homepage    // SEM AUTH -> DTO IN -> DTO OUT
+			user.PUT("/update/", middleware.Authorized(), controller.UpdateProfile)    // AUTH - OWNER
+			user.DELETE("/delete/", middleware.Authorized(), controller.DeleteAccount) // AUTH - OWNER
 		}
 
 		admin := v1.Group("/admin")
 		{
-			admin.GET("/reports", middleware.Authorized("ADMIN", "AUTHORITY"), controller.GetAllReports) // AUTH -> DTO RESPONSE (ID, NAME, EMAIL)
+			admin.GET("/reports", middleware.Authorized("ADMIN", "AUTHORITY"), controller.GetAllReports)              // AUTH -> DTO RESPONSE (ID, NAME, EMAIL)
+			admin.PUT("/updaterole/:id", middleware.Authorized("ADMIN", "AUTHORITY"), controller.AdminChangeUserRole) // AUTH -> DTO IN -> DTO OUT
+			admin.PUT("/delete/:id", middleware.Authorized("ADMIN"), controller.DeleteAccountByAdmin)                 // AUTH -> DTO IN -> DTO OUT
 		}
 
 		authority := v1.Group("/authority")
