@@ -49,7 +49,7 @@ func Register(c *gin.Context) {
 
 	c.JSON(200, gin.H{
 		"message": "User registered successfully",
-		"token": token,
+		"token":   token,
 	})
 }
 
@@ -76,19 +76,21 @@ func UpdateProfile(c *gin.Context) {
 	c.ShouldBind(&user)
 
 	// Check if the email is valid and non used
-	if !service.IsValidEmail(user.Email) {
-		c.JSON(401, gin.H{
-			"message": "the email you fill is invalid",
-		})
-		return
+	if user.Email != "" {
+		if !service.IsValidEmail(user.Email) {
+			c.JSON(401, gin.H{
+				"message": "the email you fill is invalid",
+			})
+			return
+		}
+	
+		if service.IsUsedEmail(user.Email) {
+			c.JSON(401, gin.H{
+				"message": "the email you fill is already used",
+			})
+			return
+		}
 	}
-	if service.IsUsedEmail(user.Email) {
-		c.JSON(401, gin.H{
-			"message": "the email you fill is already used",
-		})
-		return
-	}
-
 	userResponse, err := service.UpdateProfile(user, userID)
 	if err != nil {
 		c.JSON(404, gin.H{
